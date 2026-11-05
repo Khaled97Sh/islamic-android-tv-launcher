@@ -18,13 +18,30 @@ class BackgroundLoader(private val context: Context) {
         .filter { it.endsWith(".jpg") }.map { it.removeSuffix(".jpg") }.sorted()
     val count get() = names.size
 
-    /** Blocking, run on an IO dispatcher. */
+    /** A bundled photo. Blocking, run on an IO dispatcher. */
     fun load(index: Int): BackgroundImage? {
         if (names.isEmpty()) return null
         val opts = BitmapFactory.Options().apply { inSampleSize = 2 }
         val bmp = runCatching {
             context.assets.open("bg/${names[index % names.size]}.jpg").use { BitmapFactory.decodeStream(it, null, opts) }
         }.getOrNull() ?: return null
+        return process(bmp)
+    }
+
+    /** A downloaded photo (any size >= 4K, any aspect): decoded near 1920 px wide and centre-cropped to 16:9. Blocking. */
+    fun load(file: java.io.File): BackgroundImage? {
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(file.path, bounds)
+        if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
+        val opts = BitmapFactory.Options().apply { inSampleSize = sampleFor(bounds.outWidth) }
+        val raw = runCatching { BitmapFactory.decodeFile(file.path, opts) }.getOrNull() ?: return null
+        val r = cropTo16by9(raw.width, raw.height)
+        val bmp = if (r.width == raw.width && r.height == raw.height) raw
+        else Bitmap.createBitmap(raw, r.left, r.top, r.width, r.height).also { raw.recycle() }
+        return process(bmp)
+    }
+
+    private fun process(bmp: Bitmap): BackgroundImage {
         val small = Bitmap.createScaledBitmap(bmp, BLUR_W, BLUR_H, true)
         val blurred = boxBlur(small, radius = 4, passes = 3)
         val px = IntArray(BLUR_W * BLUR_H).also { blurred.getPixels(it, 0, BLUR_W, 0, 0, BLUR_W, BLUR_H) }
@@ -70,4 +87,17 @@ class BackgroundLoader(private val context: Context) {
         /** sRGB byte -> linear light, so the luminance is a real "relative luminance" (0 = black, 1 = white). */
         val LIN = FloatArray(256) { v -> val c = v / 255f; if (c <= 0.04045f) c / 12.92f else Math.pow(((c + 0.055f) / 1.055f).toDouble(), 2.4).toFloat() }
     }
+}
+
+/** Largest power-of-two sample size that keeps the decoded width at or above 1920 px (the UI's layout resolution). */
+fun sampleFor(width: Int): Int { var s = 1; while (width / (s * 2) >= 1920) s *= 2; return s }
+
+/** A crop window in pixels. */
+data class Crop(val left: Int, val top: Int, val width: Int, val height: Int)
+
+/** The centred 16:9 window inside a [w] x [h] image (the whole image when it already is 16:9). */
+fun cropTo16by9(w: Int, h: Int): Crop {
+    val targetH = (w * 9L / 16).toInt()
+    return if (targetH <= h) Crop(0, (h - targetH) / 2, w, targetH)
+    else { val targetW = (h * 16L / 9).toInt(); Crop((w - targetW) / 2, 0, targetW, h) }
 }
