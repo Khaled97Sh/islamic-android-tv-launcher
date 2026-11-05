@@ -28,10 +28,24 @@ class OnlineBackgrounds(private val context: Context) {
     fun discard(name: String) { File(dir, name).delete() }
 
     private fun nameOf(title: String) = title.replace(Regex("[^A-Za-z0-9._-]"), "_").take(100).removeSuffix(".jpg").removeSuffix(".JPG") + ".jpg"
+    /** Bytes this feature downloaded today (search pages and photos), kept per calendar day. */
+    private fun bytesToday(): Long {
+        val day = System.currentTimeMillis() / DAY_MS
+        return if (prefs.getLong("budget_day", -1) == day) prefs.getLong("budget_bytes", 0) else 0
+    }
+    private fun addBytes(n: Long) {
+        val day = System.currentTimeMillis() / DAY_MS
+        prefs.edit().putLong("budget_day", day).putLong("budget_bytes", bytesToday() + n).apply()
+    }
+
     private fun rejected(): MutableSet<String> = prefs.getStringSet("rejected", emptySet())!!.toMutableSet()
 
     /** One unit of work, on an IO thread. Returns how long to wait before the next call. */
     fun syncStep(): Long {
+        // Never on mobile data or a metered hotspot: no request at all, not even a search.
+        if (!NetworkGuard.isUnmetered(context)) return NOT_UNMETERED_MS
+        // A hard daily limit on what this feature may download, whatever else happens.
+        if (bytesToday() >= DAILY_BUDGET_BYTES) return BUDGET_MS
         dir.listFiles().orEmpty().filter { it.name.endsWith(".part") }.forEach { it.delete() }
         val have = files()
         if (have.size >= MAX_CACHE) {
@@ -52,6 +66,7 @@ class OnlineBackgrounds(private val context: Context) {
         var term = prefs.getInt("term", 0) % OnlineSearch.TERMS.size
         val offset = prefs.getInt("offset", 0)
         val page = OnlineSearch.fetch(OnlineSearch.TERMS[term], offset) ?: return false
+        addBytes(page.bytes)
         val skip = rejected() + files().map { it.name }
         var kept = 0
         for (c in page.candidates) {
@@ -82,6 +97,7 @@ class OnlineBackgrounds(private val context: Context) {
                 val buf = ByteArray(16 * 1024)
                 while (true) { val n = input.read(buf); if (n < 0) break; total += n; if (total > MAX_BYTES) { tmp.delete(); refuse(c, "too large"); return false }; out.write(buf, 0, n) }
             } }
+            addBytes(total)
             val b = BitmapFactory.Options().apply { inJustDecodeBounds = true }
             BitmapFactory.decodeFile(tmp.path, b)
             if (b.outWidth < MIN_DECODED_WIDTH || b.outHeight < MIN_DECODED_HEIGHT) { tmp.delete(); refuse(c, "downloaded size ${b.outWidth}x${b.outHeight} is below 4K"); return false }
@@ -104,5 +120,10 @@ class OnlineBackgrounds(private val context: Context) {
         const val RETRY_MS = 10L * 60_000L
         const val IDLE_MS = 6L * 60 * 60_000L
         const val ROTATE_CACHE_MS = 24L * 60 * 60_000L
+        const val NOT_UNMETERED_MS = 5L * 60_000L
+        const val BUDGET_MS = 60L * 60_000L
+        const val DAY_MS = 24L * 60 * 60_000L
+        /** At most this much per day (about 8 photos): the cache fills slowly and a bug can never run up a big bill. */
+        const val DAILY_BUDGET_BYTES = 25L * 1024 * 1024
     }
 }
