@@ -41,4 +41,17 @@ class BackgroundPlaylistTest {
     @Test fun sampleKeepsAtLeast1920Wide() {
         assertEquals(2, sampleFor(3840)); assertEquals(1, sampleFor(1920)); assertEquals(4, sampleFor(7680)); assertEquals(1, sampleFor(1000))
     }
+
+    @Test fun downloadsStartWhenFiveBundledPhotosAreLeft() {
+        val c = BackgroundPlaylist.cycle(50, listOf("a.jpg"), null, Random(5))
+        // showing item i: the bundled photos still to come are 49 - i
+        assertEquals(false, BackgroundPlaylist.downloadsShouldRun(c, 0))      // 49 unseen
+        assertEquals(false, BackgroundPlaylist.downloadsShouldRun(c, 43))     // 6 unseen
+        assertEquals(true, BackgroundPlaylist.downloadsShouldRun(c, 44))      // 5 unseen -> start
+        assertEquals(true, BackgroundPlaylist.downloadsShouldRun(c, 49))      // 0 unseen
+        assertEquals(true, BackgroundPlaylist.downloadsShouldRun(c, 50))      // showing a downloaded photo
+    }
+
+    @Test fun fewBundledPhotosStartImmediately() =
+        assertEquals(true, BackgroundPlaylist.downloadsShouldRun(BackgroundPlaylist.cycle(4, emptyList(), null, Random(1)), 0))
 }

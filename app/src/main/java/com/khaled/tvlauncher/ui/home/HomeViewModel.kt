@@ -129,9 +129,10 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
             while (true) {
                 val cycle = BackgroundPlaylist.cycle(bgLoader.count, onlineBg.cachedNames(), last)
                 if (cycle.isEmpty()) { delay(60_000L); continue }
-                for (item in cycle) {
+                for ((i, item) in cycle.withIndex()) {
                     while (!visible) delay(2_000L)
                     last = item
+                    onlineBg.triggered = BackgroundPlaylist.downloadsShouldRun(cycle, i)
                     val img = withContext(Dispatchers.IO) {
                         when (item) {
                             is BgItem.Static -> bgLoader.load(item.index)
@@ -146,9 +147,9 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
                 }
             }
         }
-        // Extra photos: downloaded one at a time while online (never blocks the UI), kept on disk, shown after the bundled ones.
+        // Extra photos: downloaded one at a time (never blocks the UI), kept on disk, shown after the bundled ones. They only start
+        // once 5 or fewer bundled photos of the cycle are still unseen; budgets: 500 MB/day on Wi-Fi, 100 MB/day on mobile data / hotspot.
         viewModelScope.launch(guard) {
-            delay(20_000L)   // let Wi-Fi come up and the first screen settle
             // Offline, a full disk, an out-of-memory decode, a changed API: any failure just means "try again later".
             while (true) delay(withContext(Dispatchers.IO) {
                 runCatching { onlineBg.syncStep() }

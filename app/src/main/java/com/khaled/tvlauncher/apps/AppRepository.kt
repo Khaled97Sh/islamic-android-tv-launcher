@@ -41,7 +41,11 @@ class AppRepository(context: Context) {
     private fun item(pkg: String, label: String?, locked: Boolean): AppItem? {
         val pm = app.packageManager
         return try {
-            val icon = if (pkg == STOCK) houseIcon() else pm.getApplicationIcon(pkg).toBitmap(ICON_PX, ICON_PX)
+            val icon = when (pkg) {
+                STOCK -> houseIcon()
+                SETTINGS -> gearIcon()
+                else -> pm.getApplicationIcon(pkg).toBitmap(ICON_PX, ICON_PX)
+            }
             val name = label ?: pm.getApplicationLabel(pm.getApplicationInfo(pkg, 0)).toString()
             AppItem(name, pkg, icon.asImageBitmap(), locked, youtube = pkg in YOUTUBE_PKGS)
         } catch (_: PackageManager.NameNotFoundException) {
@@ -135,10 +139,38 @@ class AppRepository(context: Context) {
         return bmp
     }
 
+    /** A flat white gear outline (same stroke and style as [houseIcon]): 8 teeth, a ring in the middle. */
+    private fun gearIcon(): Bitmap {
+        val size = ICON_PX
+        val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val c = Canvas(bmp)
+        val p = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE; style = Paint.Style.STROKE; strokeWidth = size * 0.07f
+            strokeJoin = Paint.Join.ROUND; strokeCap = Paint.Cap.ROUND
+        }
+        val f = size.toFloat(); val cx = f / 2; val cy = f / 2
+        val rOut = f * 0.36f; val rIn = f * 0.27f; val teeth = 8
+        val outline = Path()
+        for (i in 0 until teeth * 4) {
+            // each tooth: rise, flat top, fall, flat valley
+            val a = (i / 4) * 2 * Math.PI / teeth
+            val step = 2 * Math.PI / teeth / 4
+            val r = if (i % 4 == 1 || i % 4 == 2) rOut else rIn
+            val ang = a + (i % 4) * step - step / 2
+            val x = cx + (r * Math.cos(ang)).toFloat(); val y = cy + (r * Math.sin(ang)).toFloat()
+            if (i == 0) outline.moveTo(x, y) else outline.lineTo(x, y)
+        }
+        outline.close()
+        c.drawPath(outline, p)
+        c.drawCircle(cx, cy, f * 0.115f, p)
+        return bmp
+    }
+
     private companion object {
         const val ICON_PX = 160
         val YOUTUBE_PKGS = listOf("com.google.android.youtube.tv", "com.google.android.youtube")
         const val PROTV = "com.prosoft.tv.launcher"
+        const val SETTINGS = "com.android.tv.settings"
         const val STOCK = "com.google.android.apps.tv.launcherx"
         const val STOCK_HOME = "com.google.android.apps.tv.launcherx.home.HomeActivity"
     }

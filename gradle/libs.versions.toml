@@ -1,6 +1,6 @@
 [versions]
 # App version: bump both for every release (versionCode must always increase).
-appVersionName = "1.0"
+appVersionName = "1.0.0"
 appVersionCode = "1"
 
 agp = "8.13.0"

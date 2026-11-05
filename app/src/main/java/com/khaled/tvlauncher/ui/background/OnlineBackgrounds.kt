@@ -18,6 +18,10 @@ class OnlineBackgrounds(private val context: Context) {
     private val dir = File(context.filesDir, "bg_online").apply { mkdirs() }
     private val prefs = context.getSharedPreferences("online_bg", Context.MODE_PRIVATE)
     private val queue = ArrayDeque<Candidate>()
+    private var net = NetClass.NONE
+
+    /** Set by the rotation: true once only a few bundled photos are left unseen in the current cycle. */
+    @Volatile var triggered = false
 
     private fun files() = dir.listFiles().orEmpty().filter { it.name.endsWith(".jpg") && it.length() > 0 }
 
@@ -28,24 +32,33 @@ class OnlineBackgrounds(private val context: Context) {
     fun discard(name: String) { File(dir, name).delete() }
 
     private fun nameOf(title: String) = title.replace(Regex("[^A-Za-z0-9._-]"), "_").take(100).removeSuffix(".jpg").removeSuffix(".JPG") + ".jpg"
-    /** Bytes this feature downloaded today (search pages and photos), kept per calendar day. */
-    private fun bytesToday(): Long {
+    /** Today's downloaded bytes: in total, and the part that went over a metered connection (mobile data / hotspot). */
+    private fun today(key: String): Long {
         val day = System.currentTimeMillis() / DAY_MS
-        return if (prefs.getLong("budget_day", -1) == day) prefs.getLong("budget_bytes", 0) else 0
+        return if (prefs.getLong("budget_day", -1) == day) prefs.getLong(key, 0) else 0
     }
     private fun addBytes(n: Long) {
         val day = System.currentTimeMillis() / DAY_MS
-        prefs.edit().putLong("budget_day", day).putLong("budget_bytes", bytesToday() + n).apply()
+        val total = today("bytes_total") + n
+        val metered = today("bytes_metered") + if (net == NetClass.METERED) n else 0
+        prefs.edit().putLong("budget_day", day).putLong("bytes_total", total).putLong("bytes_metered", metered).apply()
+    }
+    /** What may still be downloaded today on the current connection (0 = stop for today). */
+    private fun budgetLeft(): Long {
+        val all = DAILY_BUDGET_WIFI_BYTES - today("bytes_total")
+        return if (net == NetClass.METERED) minOf(all, DAILY_BUDGET_METERED_BYTES - today("bytes_metered")) else all
     }
 
     private fun rejected(): MutableSet<String> = prefs.getStringSet("rejected", emptySet())!!.toMutableSet()
 
     /** One unit of work, on an IO thread. Returns how long to wait before the next call. */
     fun syncStep(): Long {
-        // Never on mobile data or a metered hotspot: no request at all, not even a search.
-        if (!NetworkGuard.isUnmetered(context)) return NOT_UNMETERED_MS
-        // A hard daily limit on what this feature may download, whatever else happens.
-        if (bytesToday() >= DAILY_BUDGET_BYTES) return BUDGET_MS
+        // Nothing is requested until the bundled photos are nearly used up (see BackgroundPlaylist.downloadsShouldRun).
+        if (!triggered) return WAIT_TRIGGER_MS
+        net = NetworkGuard.classify(context)
+        if (net == NetClass.NONE) return NOT_ONLINE_MS
+        // Hard daily limits: 500 MB on Wi-Fi, 100 MB on mobile data / a phone hotspot, whatever else happens.
+        if (budgetLeft() <= 0) return BUDGET_MS
         dir.listFiles().orEmpty().filter { it.name.endsWith(".part") }.forEach { it.delete() }
         val have = files()
         if (have.size >= MAX_CACHE) {
@@ -120,10 +133,11 @@ class OnlineBackgrounds(private val context: Context) {
         const val RETRY_MS = 10L * 60_000L
         const val IDLE_MS = 6L * 60 * 60_000L
         const val ROTATE_CACHE_MS = 24L * 60 * 60_000L
-        const val NOT_UNMETERED_MS = 5L * 60_000L
+        const val WAIT_TRIGGER_MS = 15_000L
+        const val NOT_ONLINE_MS = 5L * 60_000L
         const val BUDGET_MS = 60L * 60_000L
         const val DAY_MS = 24L * 60 * 60_000L
-        /** At most this much per day (about 8 photos): the cache fills slowly and a bug can never run up a big bill. */
-        const val DAILY_BUDGET_BYTES = 25L * 1024 * 1024
+        const val DAILY_BUDGET_WIFI_BYTES = 500L * 1024 * 1024
+        const val DAILY_BUDGET_METERED_BYTES = 100L * 1024 * 1024
     }
 }

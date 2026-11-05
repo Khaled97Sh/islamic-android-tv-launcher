@@ -31,7 +31,10 @@ Rule of thumb: `ui/*` may depend on the feature packages, the feature packages n
   To add a widget: define it in `WidgetRegistry.kt`, then draw it in `WidgetBody()` in `WidgetCards.kt`.
 - `ui/theme/Glass.kt`: `Modifier.glass()` draws only the slice of a pre-blurred copy of the background behind each panel (cheap),
   plus a smoke tint for contrast, a sheen and a light edge.
-- `ui/background/Background.kt`: rotates the photos in `assets/bg/` every 30 s. Photos are 3840x2160 files decoded at 1920x1080. Do not add 8K.
+- `ui/background/Background.kt`: loads bundled photos (`assets/bg/`, 3840x2160 decoded at 1920x1080; do not add 8K) and downloaded ones
+  (centre-cropped to 16:9). `BackgroundPlaylist` orders a cycle (bundled, then downloaded) and decides when downloading may start.
+- Online photos (see README "Online background photos"): `OnlineSearch` (Commons API), `OnlineRules` (accept/reject), `FaceCheck`,
+  `NetworkGuard` (NONE / METERED / UNMETERED), `OnlineBackgrounds` (slow downloader, daily budget, 40-photo cache in `filesDir/bg_online`).
 - `ui/theme/Type.kt`, `Text.kt`: fonts (IBM Plex Sans Arabic for UI, Amiri Quran for verses) and per-font size factors.
 
 ## Prayer times and adhan
