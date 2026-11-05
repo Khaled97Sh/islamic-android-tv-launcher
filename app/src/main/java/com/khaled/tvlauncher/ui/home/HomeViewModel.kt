@@ -18,6 +18,9 @@ import com.khaled.tvlauncher.time.DAMASCUS
 import com.khaled.tvlauncher.time.TrustedClock
 import com.khaled.tvlauncher.ui.background.BackgroundImage
 import com.khaled.tvlauncher.ui.background.BackgroundLoader
+import com.khaled.tvlauncher.ui.background.BackgroundPlaylist
+import com.khaled.tvlauncher.ui.background.BgItem
+import com.khaled.tvlauncher.ui.background.OnlineBackgrounds
 import com.khaled.tvlauncher.ui.theme.UI_V2
 import com.khaled.tvlauncher.weather.Weather
 import com.khaled.tvlauncher.weather.WeatherRepository
@@ -43,6 +46,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     private val weatherRepo = WeatherRepository(app)
     private val content = ContentRepository(app)
     private val bgLoader = BackgroundLoader(app)
+    private val onlineBg = OnlineBackgrounds(app)
     private val yt = YouTubeSuggestions()
 
     /** A crash in any background loop must never take the launcher down (it is the TV's only Home): log it and stop that loop. */
@@ -106,22 +110,38 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         reloadApps()
-        // Rotate the background photo every 30 s, walking a shuffled order (one decoded at a time).
+        // Rotate the background photo every 30 s: every bundled photo once (shuffled), then every downloaded one, then again.
         // While another app is in front nothing is shown, so no photo is decoded then.
         viewModelScope.launch(guard) {
-            if (bgLoader.count == 0) return@launch
-            var order = (0 until bgLoader.count).shuffled()
-            var p = 0
+            var last: BgItem? = null
             while (true) {
-                if (!visible) { delay(2_000L); continue }
-                if (p >= order.size) {
-                    val last = order.last()
-                    order = (0 until bgLoader.count).shuffled().let { if (it.size > 1 && it.first() == last) it.drop(1) + it.first() else it }
-                    p = 0
+                val cycle = BackgroundPlaylist.cycle(bgLoader.count, onlineBg.cachedNames(), last)
+                if (cycle.isEmpty()) { delay(60_000L); continue }
+                for (item in cycle) {
+                    while (!visible) delay(2_000L)
+                    last = item
+                    val img = withContext(Dispatchers.IO) {
+                        when (item) {
+                            is BgItem.Static -> bgLoader.load(item.index)
+                            is BgItem.Online -> runCatching { bgLoader.load(onlineBg.file(item.name)) }.getOrNull()
+                                .also { if (it == null) onlineBg.discard(item.name) }
+                        }
+                    }
+                    if (img == null) continue
+                    _bg.value = img
+                    delay(ROTATE_MS)
                 }
-                withContext(Dispatchers.IO) { bgLoader.load(order[p++]) }?.let { _bg.value = it }
-                delay(ROTATE_MS)
             }
+        }
+        // Extra photos: downloaded one at a time while online (never blocks the UI), kept on disk, shown after the bundled ones.
+        viewModelScope.launch(guard) {
+            delay(20_000L)   // let Wi-Fi come up and the first screen settle
+            // Offline, a full disk, an out-of-memory decode, a changed API: any failure just means "try again later".
+            while (true) delay(withContext(Dispatchers.IO) {
+                runCatching { onlineBg.syncStep() }
+                    .onFailure { android.util.Log.w("TvLauncher", "online bg step failed", it) }
+                    .getOrDefault(OnlineBackgrounds.RETRY_MS)
+            })
         }
         // Clock + ticker window: the display has minute resolution, so tick on the minute boundary.
         viewModelScope.launch(guard) {
