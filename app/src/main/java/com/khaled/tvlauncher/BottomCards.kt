@@ -1,0 +1,25 @@
+package com.khaled.tvlauncher
+
+import android.content.Context
+
+/**
+ * The ayah and zikr cards at the bottom can each be switched off from the "+" list, next to the widgets. They do not
+ * count toward [MAX_WIDGETS] (they are not grid cards). Both are ON by default: what is stored is the list of cards the
+ * user turned OFF, so a fresh install, or a card added in a later version, shows by default.
+ */
+val BOTTOM_CARDS = listOf(
+    WidgetDef("ayah", "آية الآن", "آية قرآنية تتغيّر كل دقيقة", "آ"),
+    WidgetDef("zikr", "ذكر الآن", "ذكر يتغيّر كل دقيقة", "ذ"),
+)
+
+class BottomCardsStore(context: Context) {
+    private val prefs = context.applicationContext.getSharedPreferences("bottom_cards", Context.MODE_PRIVATE)
+
+    /** Ids of the cards that are turned off. */
+    fun hidden(): Set<String> {
+        val known = BOTTOM_CARDS.map { it.id }.toSet()
+        return (prefs.getString("hidden", "") ?: "").split(",").filter { it in known }.toSet()
+    }
+
+    fun setHidden(ids: Set<String>) = prefs.edit().putString("hidden", ids.joinToString(",")).apply()
+}

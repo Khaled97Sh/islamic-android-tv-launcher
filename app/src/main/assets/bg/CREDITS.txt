@@ -1,0 +1,66 @@
+Background photos from Wikimedia Commons (cropped to 16:9, resized to 3840x2160):
+sunset.jpg - Sunsets of Umm al-Fahm6.JPG - Moataz Egbaria - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Sunsets_of_Umm_al-Fahm6.JPG
+dome_rock.jpg - Exterior of the Dome of the Rock, Jerusalem7.jpg - Diego Delso - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Exterior_of_the_Dome_of_the_Rock,_Jerusalem7.jpg
+aqsa.jpg - Dome of the Al-Aqsa Mosque (20160).jpg - Rhododendrites - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Dome_of_the_Al-Aqsa_Mosque_(20160).jpg
+
+Content credits:
+Quran text: Tanzil Project (quran-simple), via api.alquran.cloud - https://tanzil.net
+Azkar: Hisn al-Muslim dataset, rn0x/Adhkar-json - https://github.com/rn0x/Adhkar-json
+umayyad_night.jpg - Great Mosque of the Umayyads at night.jpg - Bassel Khabbaz - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Great_Mosque_of_the_Umayyads_at_night.jpg
+umayyad_arcade.jpg - The Umayyad Mosque in night.JPG - Alaaalyaseen - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:The_Umayyad_Mosque_in_night.JPG
+umayyad_treasury_dusk.jpg - Umayyad Mosque- الجامع الأموي.jpg - Hani Zaitoun - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Umayyad_Mosque-_الجامع_الأموي.jpg
+umayyad_treasury_detail.jpg - The Great Umayyed Mosque of Damascus, Syria, and Khazne (Treasury).jpg - James Gordon from Los Angeles, California, USA - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:The_Great_Umayyed_Mosque_of_Damascus,_Syria,_and_Khazne_(Treasury).jpg
+umayyad_dome.jpg - Umayyad Mosque, Damascus (دمشق), Syria - Dome of prayer hall - PHBZ024 2016 1389 - Dumbarton Oaks.jpg - Frank Kidner - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Umayyad_Mosque,_Damascus_(دمشق),_Syria_-_Dome_of_prayer_hall_-_PHBZ024_2016_1389_-_Dumbarton_Oaks.jpg
+andalus_cordoba_arches.jpg - Córdoba - Mezquita-Catedral - Interior - 10.jpg - Benjamin Smith - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Córdoba_-_Mezquita-Catedral_-_Interior_-_10.jpg
+andalus_lions_night.jpg - Court of the Lions by night 2019.jpg - Bjørn Christian Tørrissen - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Court_of_the_Lions_by_night_2019.jpg
+andalus_generalife.jpg - Generalife Garden Alhambra 02 2014.jpg - Tuxyso - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Generalife_Garden_Alhambra_02_2014.jpg
+andalus_mihrab.jpg - Mirhab mezquita cordoba.jpg - Jebulon - Public domain - https://commons.wikimedia.org/wiki/File:Mirhab_mezquita_cordoba.jpg
+andalus_nasrid_night.jpg - Nasride Palace - La Alhambra de Granada Spain Andalousia - Picture Image Photography - By night reflections (14691494298).jpg - Grand Parc - Bordeaux, France from France - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Nasride_Palace_-_La_Alhambra_de_Granada_Spain_Andalousia_-_Picture_Image_Photography_-_By_night_reflections_(14691494298).jpg
+andalus_alhambra_dusk.jpg - Night view from Alhambra de Granada, Andalousia Spain - Image Picture Photography (14691952077).jpg - Grand Parc - Bordeaux, France from France - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Night_view_from_Alhambra_de_Granada,_Andalousia_Spain_-_Image_Picture_Photography_(14691952077).jpg
+andalus_alhambra_towers.jpg - Various roofs and towers of Alhambra, from Generalife gardens, Granada, Spain.jpg - Jebulon - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Various_roofs_and_towers_of_Alhambra,_from_Generalife_gardens,_Granada,_Spain.jpg
+alhambra_arches.jpg - Nasride Palace - La Alhambra de Granada Spain Andalousia - Picture Image Photography (14723326260).jpg - Grand Parc - Bordeaux, France from France - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Nasride_Palace_-_La_Alhambra_de_Granada_Spain_Andalousia_-_Picture_Image_Photography_(14723326260).jpg
+alhambra_night_view.jpg - Night view from Alhambra de Granada, Andalousia Spain - Image Picture Photography (14691952077).jpg - Grand Parc - Bordeaux, France from France - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Night_view_from_Alhambra_de_Granada,_Andalousia_Spain_-_Image_Picture_Photography_(14691952077).jpg
+alhambra_roofs.jpg - Various roofs and towers of Alhambra, from Generalife gardens, Granada, Spain.jpg - Jebulon - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Various_roofs_and_towers_of_Alhambra,_from_Generalife_gardens,_Granada,_Spain.jpg
+azhar_minarets.jpg - The Al-Azhar Mosque in Cairo 2026 13.jpg - CumaliOnal - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:The_Al-Azhar_Mosque_in_Cairo_2026_13.jpg
+badshahi_arch.jpg - Badshahi Mosque, Lahore I.jpg - Fassifarooq - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Badshahi_Mosque,_Lahore_I.jpg
+bluemosque_domes.jpg - Domes - Blue Mosque (The Sultan Ahmed Mosque) (8394847832).jpg - Jorge Láscar from Australia - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Domes_-_Blue_Mosque_(The_Sultan_Ahmed_Mosque)_(8394847832).jpg
+bluemosque_dusk.jpg - Blue Mosque (The Sultan Ahmed Mosque) (8396648956).jpg - Jorge Láscar from Australia - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Blue_Mosque_(The_Sultan_Ahmed_Mosque)_(8396648956).jpg
+cordoba_arches2.jpg - Córdoba - Mezquita-Catedral - Interior - 10.jpg - Benjamin Smith - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Córdoba_-_Mezquita-Catedral_-_Interior_-_10.jpg
+dome_rock2.jpg - Dome of the Rock (10).jpg - From different sites and photographers - CC0 - https://commons.wikimedia.org/wiki/File:Dome_of_the_Rock_(10).jpg
+dome_rock_arches.jpg - Jerusalem-2013-Temple Mount-Dome of the Rock & Chain.jpg - Godot13 - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Jerusalem-2013-Temple_Mount-Dome_of_the_Rock_&_Chain.jpg
+faisal_blue.jpg - Shah Faisal Mosque Islamabad,Pakistan.JPG - Naveed Fayyaz - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Shah_Faisal_Mosque_Islamabad,Pakistan.JPG
+generalife_pool.jpg - Generalife Garden Alhambra 02 2014.jpg - Tuxyso - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Generalife_Garden_Alhambra_02_2014.jpg
+hassan2_arch.jpg - Whispers of Gold - Hassan II Mosque at Dusk.jpg - OussamaHamama - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Whispers_of_Gold_-_Hassan_II_Mosque_at_Dusk.jpg
+kairouan_mihrab.jpg - Great Mosque of Kairouan mihrab view.jpg - IssamBarhoumi - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Great_Mosque_of_Kairouan_mihrab_view.jpg
+kairouan_minaret.jpg - The Minaret of the Great Mosque Okba of Kairouan, Tunisia.jpg - Monaam Ben Fredj - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:The_Minaret_of_the_Great_Mosque_Okba_of_Kairouan,_Tunisia.jpg
+muhammadali_dome.jpg - Central dome surrounded by half domes - Mosque of Muhammad Ali (14795437032).jpg - Jorge Láscar from Melbourne, Australia - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Central_dome_surrounded_by_half_domes_-_Mosque_of_Muhammad_Ali_(14795437032).jpg
+putra_dome.jpg - Putrajaya Malaysia Putra-Mosque-06.jpg - CEphoto, Uwe Aranas - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Putrajaya_Malaysia_Putra-Mosque-06.jpg
+selimiye.jpg - Selimiye Cami, Mimar Sinan'ın Ustalık Eseri 2015.jpg - Hamdigumus - CC0 - https://commons.wikimedia.org/wiki/File:Selimiye_Cami,_Mimar_Sinan'ın_Ustalık_Eseri_2015.jpg
+sulaymaniye_dome.jpg - Courtyard of the Süleymaniye Mosque in Istanbul, Turkey 002.jpg - Moonik - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Courtyard_of_the_Süleymaniye_Mosque_in_Istanbul,_Turkey_002.jpg
+bluemosque_sunset.jpg - Exterior of Sultan Ahmed I Mosque in Istanbul, Turkey 002.jpg - Moonik - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Exterior_of_Sultan_Ahmed_I_Mosque_in_Istanbul,_Turkey_002.jpg
+fez_door.jpg - Fez Al-Qarawiyyin mosque (54247785576).jpg - Jorge Franganillo - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Fez_Al-Qarawiyyin_mosque_(54247785576).jpg
+istanbul_sunset.jpg - Günbatımı, Sultanahmet 2015-2.jpg - Hamdigumus - CC0 - https://commons.wikimedia.org/wiki/File:Günbatımı,_Sultanahmet_2015-2.jpg
+jerusalem_dusk.jpg - Jerusalem (31919941052).jpg - Ricardo Tulio Gandelman from Rio de Janeiro, Brazil - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Jerusalem_(31919941052).jpg
+kairouan_courtyard.jpg - Courtyard of the Great Mosque Okba of Kairouan.jpg - Monaam Ben Fredj - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Courtyard_of_the_Great_Mosque_Okba_of_Kairouan.jpg
+selimiye_dome.jpg - Interior of dome, Selimiye Mosque, Edirne - Tarik Kaan Muslu.jpg - Tarikkaanmuslu - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Interior_of_dome,_Selimiye_Mosque,_Edirne_-_Tarik_Kaan_Muslu.jpg
+suleymaniye_bluehour.jpg - Istanbul Süleymaniye Mosque (54524972163).jpg - Jorge Franganillo - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Istanbul_Süleymaniye_Mosque_(54524972163).jpg
+taj_mosque.jpg - Taj Mahal mosque agra.jpg - Mahi zahidi - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Taj_Mahal_mosque_agra.jpg
+umayyad_ceiling.jpg - Damascus Umayyad Mosque interior mihrab area 1492.jpg - Dosseman - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Damascus_Umayyad_Mosque_interior_mihrab_area_1492.jpg
+umayyad_dome_light.jpg - Damascus Umayyad Mosque interior mihrab area 8037.jpg - Dosseman - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Damascus_Umayyad_Mosque_interior_mihrab_area_8037.jpg
+umayyad_mihrab_gold.jpg - Damascus Umayyad Mosque interior mihrab area 1495.jpg - Dosseman - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Damascus_Umayyad_Mosque_interior_mihrab_area_1495.jpg
+umayyad_mihrab_marble.jpg - Damascus Umayyad Mosque interior mihrab area 8038.jpg - Dosseman - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Damascus_Umayyad_Mosque_interior_mihrab_area_8038.jpg
+wazirkhan_facade.jpg - Masjid Wazir Khan of Lahore.jpg - Taahaa Khalid - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Masjid_Wazir_Khan_of_Lahore.jpg
+yenicami_golden.jpg - Eminonu waterfront with Yeni Cami and Suleymaniye Mosque from Galata Bridge, Istanbul - Tarik Kaan Muslu.jpg - Tarikkaanmuslu - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Eminonu_waterfront_with_Yeni_Cami_and_Suleymaniye_Mosque_from_Galata_Bridge,_Istanbul_-_Tarik_Kaan_Muslu.jpg
+jerusalem_dome_view.jpg - Jerusalem IMG 6962 (6190188019).jpg - Brian Jeffery Beggerly from S'pore (Singapore), Singapore - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:Jerusalem_IMG_6962_(6190188019).jpg
+alcazaba.jpg - Alcazaba, Alhambra, Granada, Spain.jpg - Jebulon - CC0 - https://commons.wikimedia.org/wiki/File:Alcazaba,_Alhambra,_Granada,_Spain.jpg
+alhambra.jpg - Dawn Charles V Palace Alhambra Granada Andalusia Spain.jpg - Jebulon - CC0 - https://commons.wikimedia.org/wiki/File:Dawn_Charles_V_Palace_Alhambra_Granada_Andalusia_Spain.jpg
+bluemosque.jpg - Sultan Ahmed Mosque 2022 2.jpg - kallerna - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Sultan_Ahmed_Mosque_2022_2.jpg
+hassan2.jpg - Whispers of Gold - Hassan II Mosque at Dusk.jpg - OussamaHamama - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Whispers_of_Gold_-_Hassan_II_Mosque_at_Dusk.jpg
+
+More content credits (sources as reported by the project owner's other session; not re-verified here):
+Sunnah of the day: Sahih al-Bukhari and Sahih Muslim, Arabic text from fawazahmed0/hadith-api (ara-bukhari, ara-muslim) - https://github.com/fawazahmed0/hadith-api
+Daily dua: Hisn al-Muslim dataset, rn0x/Adhkar-json - https://github.com/rn0x/Adhkar-json
+Names of Allah (asma al-husna): AlAdhan API - https://api.aladhan.com/v1/asmaAlHusna
+Prayer times: Umayyad Mosque (Damascus) timetable published on Mawaqit - https://mawaqit.net/ar/m/ljm-lmwy-dmshq-dmshq-00000-syria
+Weather: Open-Meteo - https://open-meteo.com
+prophet_medium.jpg - Medium shot of the Green Dome at The Prophet's Mosque (Al Masjid-e-Nabawi).jpg - TheHadiRahim - CC0 - https://commons.wikimedia.org/wiki/File:Medium_shot_of_the_Green_Dome_at_The_Prophet's_Mosque_(Al_Masjid-e-Nabawi).jpg
