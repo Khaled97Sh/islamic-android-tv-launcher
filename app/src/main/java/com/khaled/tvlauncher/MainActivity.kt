@@ -10,6 +10,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import com.khaled.tvlauncher.azan.AzanScheduler
+import com.khaled.tvlauncher.ui.home.HomeScreen
+import com.khaled.tvlauncher.ui.home.HomeViewModel
 
 class MainActivity : ComponentActivity() {
     private val vm: HomeViewModel by viewModels()

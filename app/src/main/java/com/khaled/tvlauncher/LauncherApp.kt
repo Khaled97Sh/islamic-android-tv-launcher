@@ -6,6 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.provider.Settings
+import com.khaled.tvlauncher.prayer.MawaqitSync
+import com.khaled.tvlauncher.prayer.MosqueCalendar
+import com.khaled.tvlauncher.time.TrustedClock
 import java.io.File
 
 /**

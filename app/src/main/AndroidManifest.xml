@@ -51,9 +51,9 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AzanReceiver" android:exported="false" />
+        <receiver android:name=".azan.AzanReceiver" android:exported="false" />
 
-        <receiver android:name=".BootReceiver" android:exported="true">
+        <receiver android:name=".azan.BootReceiver" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
@@ -63,7 +63,7 @@
         </receiver>
 
         <service
-            android:name=".AzanService"
+            android:name=".azan.AzanService"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
     </application>

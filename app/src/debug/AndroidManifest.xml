@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
     <application>
         <receiver
-            android:name=".AzanReceiver"
+            android:name=".azan.AzanReceiver"
             android:exported="true"
             tools:replace="android:exported" />
     </application>
