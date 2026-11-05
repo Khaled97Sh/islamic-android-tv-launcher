@@ -19,4 +19,11 @@ object BackgroundPlaylist {
             online.shuffled(random).map { BgItem.Online(it) }
         return if (list.size > 1 && list.first() == previous) list.drop(1) + list.first() else list
     }
+
+    /** Downloads start when only this many bundled photos of the current cycle have not been shown yet. */
+    const val START_WHEN_UNSEEN = 5
+
+    /** True while showing item [index] of [cycle] if at most [START_WHEN_UNSEEN] bundled photos are still to come. */
+    fun downloadsShouldRun(cycle: List<BgItem>, index: Int): Boolean =
+        cycle.drop(index + 1).count { it is BgItem.Static } <= START_WHEN_UNSEEN
 }

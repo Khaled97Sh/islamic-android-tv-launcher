@@ -20,15 +20,55 @@ Press **+** on the app rail to open the selector: toggle each widget, the ayah /
 
 - **Prayer times that work offline**: a full-year timetable is bundled, and refreshed every 10 days from the mosque's
   Mawaqit page (validated, with typo repair). [adhan-java](https://github.com/batoulapps/adhan-java) is the last-resort fallback.
-- **Adhan**: exact alarm for the next prayer, pauses other apps, plays the adhan and shows an on-screen reminder.
-  Skipped when the screen is off. OK / Back dismisses it.
+- **Adhan**: exact alarm for the next prayer, pauses other apps (including a playing YouTube video), plays the adhan and shows a
+  liquid-glass reminder card. Skipped when the screen is off. OK / Back dismisses it. A tick box in the **+** list ("تنبيه الأذان")
+  switches the whole adhan on or off.
 - **Widgets**: next prayer + countdown, all five prayers, Gregorian + Hijri date, names of Allah, sunnah and dua (a new one
   every 6 hours, from an offline library large enough to go weeks without repeating). Optional ayah and dhikr cards. Smart chips for Friday (Surat al-Kahf) and the last third of the night.
 - **Azkar news bar** along the bottom (morning / evening schedule) and a rotating ayah.
-- **Photos** of historic mosques, no people, changing every 30 s, with blurred "glass" panels.
+- **Photos**: bundled photos of historic mosques (no people), changing every 30 s with blurred "glass" panels. When the TV is on
+  a home network the app also finds and downloads more **4K** mosque photos at run time, see
+  [Online background photos](#online-background-photos).
 - **App rail** on the left: YouTube, Settings and your own picks. The **+** tile opens a list where you switch widgets on or off and add apps.
-- **Trusted clock**: TVs without a battery-backed clock show a wrong date after an offline boot; the launcher keeps correct time anyway.
+- **Trusted clock**: TVs without a battery-backed clock show a wrong date after an offline boot; the launcher keeps correct time
+  (and correct prayer days) anyway, then follows the network clock again as soon as it is available.
+- **App name and icon**: "Islamic Tv Launcher" (Arabic: "التلفاز الإسلامي"), a flat mosque-inside-a-TV icon and TV banner.
 - Fonts: IBM Plex Sans Arabic and Amiri Quran.
+
+## Online background photos
+
+After the bundled photos have been shown, the launcher shows extra **4K** mosque / Islamic-architecture photos that it found and
+downloaded itself from [Wikimedia Commons](https://commons.wikimedia.org). Nothing extra is bundled in the APK.
+
+**When it runs**
+- A cycle is: every bundled photo once (shuffled), then every downloaded photo once, then it starts again.
+- Downloading only begins when **5 or fewer bundled photos of the current cycle are still unseen**, so a freshly started launcher
+  does not touch the network at all.
+- One photo at most every 45 seconds, in the background (never on the UI thread), the 3840 px wide version only (never the
+  8K originals), 20 MB cap per file, HTTPS only.
+
+**How much data it may use** (search pages and photos both count, reset every day)
+
+| Connection | Daily limit |
+|---|---|
+| Home Wi-Fi / Ethernet | 500 MB |
+| Mobile data or a **phone hotspot** (Android marks both as metered) | 100 MB |
+| No internet | nothing is requested |
+
+A TV connected to a phone's hotspot counts as metered, so a hotspot can never use more than 100 MB a day for this.
+
+**Which photos are accepted** (same rules as the bundled photos), checked in this order
+1. Search is done by Commons itself with a size filter (`filew`/`fileh` at least 3840x2160, JPEG only); the downloaded file is
+   checked again after download.
+2. Must carry a Commons **Quality / Featured / Valued** mark ("well-photographed").
+3. Title, description and categories must name a mosque or Islamic architecture and must **not** mention people (worshippers,
+   tourists, prayer, crowds ...), Shia / Iran / Iraq sites, shrines, tombs or other religions.
+4. After download, an on-device **face check** throws the photo away if a face is found.
+Rules live in `ui/background/OnlineRules.kt` and are unit-tested, including against a real Commons result sample.
+
+**Offline.** Up to 40 photos are kept in the app's private storage and keep working with no internet; once a day the oldest one is
+replaced so new ones keep arriving. Any failure (no network, full disk, bad file) is caught and retried later; it can never stop the
+rotation or crash the launcher.
 
 ## Build
 
@@ -96,7 +136,7 @@ Prayer times, weather and schedules currently target **Damascus**. Other cities 
 ## Project layout
 
 - `app/src/main/java/com/khaled/tvlauncher/`: one package per feature: `time`, `prayer`, `azan`, `content`, `widgets`, `weather`,
-  `youtube`, `apps`, and `ui/{home,widgets,background,theme}`. See the layout in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+  `youtube`, `apps`, and `ui/{home,widgets,background,theme}` (`ui/background` also holds the online-photo search, rules, network guard and downloader). See the layout in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 - `gradle/libs.versions.toml`: all dependency and plugin versions (version catalog).
 - `app/src/main/assets/`: `ayat.json`, `azkar.json`, `duas.json`, `sunnah.json`, `asma.json`, background photos.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): how the pieces fit together.

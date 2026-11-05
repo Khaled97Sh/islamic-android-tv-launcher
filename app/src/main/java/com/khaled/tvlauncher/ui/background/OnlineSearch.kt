@@ -19,7 +19,7 @@ object OnlineSearch {
         "Al-Aqsa", "Dome of the Rock", "Masjid al-Haram", "Masjid an-Nabawi", "Islamic geometric ornament", "muqarnas",
     )
 
-    class Page(val candidates: List<Candidate>, val nextOffset: Int?)
+    class Page(val candidates: List<Candidate>, val nextOffset: Int?, val bytes: Long = 0)
 
     fun fetch(term: String, offset: Int): Page? {
         val query = "$term filetype:bitmap filew:>${OnlineRules.MIN_WIDTH - 1} fileh:>${OnlineRules.MIN_HEIGHT - 1}"
@@ -31,7 +31,7 @@ object OnlineSearch {
         )
         val url = API + "?" + params.entries.joinToString("&") { "${it.key}=${URLEncoder.encode(it.value, "UTF-8")}" }
         val body = getText(url) ?: return null
-        return runCatching { parse(JSONObject(body)) }.getOrNull()
+        return runCatching { parse(JSONObject(body)).let { Page(it.candidates, it.nextOffset, body.length.toLong()) } }.getOrNull()
     }
 
     fun parse(root: JSONObject): Page {

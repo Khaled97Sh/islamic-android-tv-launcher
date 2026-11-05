@@ -18,6 +18,10 @@ class OnlineBackgrounds(private val context: Context) {
     private val dir = File(context.filesDir, "bg_online").apply { mkdirs() }
     private val prefs = context.getSharedPreferences("online_bg", Context.MODE_PRIVATE)
     private val queue = ArrayDeque<Candidate>()
+    private var net = NetClass.NONE
+
+    /** Set by the rotation: true once only a few bundled photos are left unseen in the current cycle. */
+    @Volatile var triggered = false
 
     private fun files() = dir.listFiles().orEmpty().filter { it.name.endsWith(".jpg") && it.length() > 0 }
 
@@ -28,10 +32,33 @@ class OnlineBackgrounds(private val context: Context) {
     fun discard(name: String) { File(dir, name).delete() }
 
     private fun nameOf(title: String) = title.replace(Regex("[^A-Za-z0-9._-]"), "_").take(100).removeSuffix(".jpg").removeSuffix(".JPG") + ".jpg"
+    /** Today's downloaded bytes: in total, and the part that went over a metered connection (mobile data / hotspot). */
+    private fun today(key: String): Long {
+        val day = System.currentTimeMillis() / DAY_MS
+        return if (prefs.getLong("budget_day", -1) == day) prefs.getLong(key, 0) else 0
+    }
+    private fun addBytes(n: Long) {
+        val day = System.currentTimeMillis() / DAY_MS
+        val total = today("bytes_total") + n
+        val metered = today("bytes_metered") + if (net == NetClass.METERED) n else 0
+        prefs.edit().putLong("budget_day", day).putLong("bytes_total", total).putLong("bytes_metered", metered).apply()
+    }
+    /** What may still be downloaded today on the current connection (0 = stop for today). */
+    private fun budgetLeft(): Long {
+        val all = DAILY_BUDGET_WIFI_BYTES - today("bytes_total")
+        return if (net == NetClass.METERED) minOf(all, DAILY_BUDGET_METERED_BYTES - today("bytes_metered")) else all
+    }
+
     private fun rejected(): MutableSet<String> = prefs.getStringSet("rejected", emptySet())!!.toMutableSet()
 
     /** One unit of work, on an IO thread. Returns how long to wait before the next call. */
     fun syncStep(): Long {
+        // Nothing is requested until the bundled photos are nearly used up (see BackgroundPlaylist.downloadsShouldRun).
+        if (!triggered) return WAIT_TRIGGER_MS
+        net = NetworkGuard.classify(context)
+        if (net == NetClass.NONE) return NOT_ONLINE_MS
+        // Hard daily limits: 500 MB on Wi-Fi, 100 MB on mobile data / a phone hotspot, whatever else happens.
+        if (budgetLeft() <= 0) return BUDGET_MS
         dir.listFiles().orEmpty().filter { it.name.endsWith(".part") }.forEach { it.delete() }
         val have = files()
         if (have.size >= MAX_CACHE) {
@@ -52,6 +79,7 @@ class OnlineBackgrounds(private val context: Context) {
         var term = prefs.getInt("term", 0) % OnlineSearch.TERMS.size
         val offset = prefs.getInt("offset", 0)
         val page = OnlineSearch.fetch(OnlineSearch.TERMS[term], offset) ?: return false
+        addBytes(page.bytes)
         val skip = rejected() + files().map { it.name }
         var kept = 0
         for (c in page.candidates) {
@@ -82,6 +110,7 @@ class OnlineBackgrounds(private val context: Context) {
                 val buf = ByteArray(16 * 1024)
                 while (true) { val n = input.read(buf); if (n < 0) break; total += n; if (total > MAX_BYTES) { tmp.delete(); refuse(c, "too large"); return false }; out.write(buf, 0, n) }
             } }
+            addBytes(total)
             val b = BitmapFactory.Options().apply { inJustDecodeBounds = true }
             BitmapFactory.decodeFile(tmp.path, b)
             if (b.outWidth < MIN_DECODED_WIDTH || b.outHeight < MIN_DECODED_HEIGHT) { tmp.delete(); refuse(c, "downloaded size ${b.outWidth}x${b.outHeight} is below 4K"); return false }
@@ -104,5 +133,11 @@ class OnlineBackgrounds(private val context: Context) {
         const val RETRY_MS = 10L * 60_000L
         const val IDLE_MS = 6L * 60 * 60_000L
         const val ROTATE_CACHE_MS = 24L * 60 * 60_000L
+        const val WAIT_TRIGGER_MS = 15_000L
+        const val NOT_ONLINE_MS = 5L * 60_000L
+        const val BUDGET_MS = 60L * 60_000L
+        const val DAY_MS = 24L * 60 * 60_000L
+        const val DAILY_BUDGET_WIFI_BYTES = 500L * 1024 * 1024
+        const val DAILY_BUDGET_METERED_BYTES = 100L * 1024 * 1024
     }
 }
