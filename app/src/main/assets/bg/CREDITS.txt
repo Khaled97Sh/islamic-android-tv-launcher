@@ -64,3 +64,11 @@ Names of Allah (asma al-husna): AlAdhan API - https://api.aladhan.com/v1/asmaAlH
 Prayer times: Umayyad Mosque (Damascus) timetable published on Mawaqit - https://mawaqit.net/ar/m/ljm-lmwy-dmshq-dmshq-00000-syria
 Weather: Open-Meteo - https://open-meteo.com
 prophet_medium.jpg - Medium shot of the Green Dome at The Prophet's Mosque (Al Masjid-e-Nabawi).jpg - TheHadiRahim - CC0 - https://commons.wikimedia.org/wiki/File:Medium_shot_of_the_Green_Dome_at_The_Prophet's_Mosque_(Al_Masjid-e-Nabawi).jpg
+
+Kaaba / Masjid al-Haram photos (Wikimedia Commons, cropped to 16:9):
+kaaba_haram_2022.jpg - Masjid al-Haram 2022.jpg - مريم محمد الغلبان - CC0 - https://commons.wikimedia.org/wiki/File:Masjid_al-Haram_2022.jpg
+kaaba_night_arcades.jpg - Mecca.JPG - Ariandra 03 - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Mecca.JPG
+kaaba_door_view.jpg - Mosquée Masjid el Haram à la Mecque.jpg - Tab59 - Public domain - https://commons.wikimedia.org/wiki/File:Mosqu%C3%A9e_Masjid_el_Haram_%C3%A0_la_Mecque.jpg
+kaaba_hajj.jpg - The Kaaba during Hajj.jpg - Adli Wahid - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:The_Kaaba_during_Hajj.jpg
+kaaba_closeup.jpg - The Ka'ba, Great Mosque of Mecca, Saudi Arabia (4).jpg - Richard Mortel - CC BY 2.0 - https://commons.wikimedia.org/wiki/File:The_Ka'ba,_Great_Mosque_of_Mecca,_Saudi_Arabia_(4).jpg
+kaaba_aerial_minarets.jpg - Al-Haram mosque - Flickr - Al Jazeera English.jpg - Al Jazeera English - CC BY-SA 2.0 - https://commons.wikimedia.org/wiki/File:Al-Haram_mosque_-_Flickr_-_Al_Jazeera_English.jpg
