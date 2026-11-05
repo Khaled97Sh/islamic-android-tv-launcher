@@ -1,10 +1,11 @@
 package com.khaled.tvlauncher.azan
 
 import android.content.Context
+import com.khaled.tvlauncher.R
 import com.khaled.tvlauncher.widgets.WidgetDef
 
 /** The row shown in the "+" list (a tick box like the widgets) that switches the whole azan alarm on or off. */
-val AZAN_ALERT = WidgetDef("azan_alert", "تنبيه الأذان", "صوت الأذان وبطاقة التذكير عند كل صلاة", "ت")
+val AZAN_ALERT = WidgetDef("azan_alert", "تنبيه الأذان", "صوت الأذان وبطاقة التذكير عند كل صلاة", R.drawable.ic_w_azan_alert)
 
 /**
  * User switch for the azan alarm. ON by default (what is stored is the user's choice, so a fresh install or an update keeps
