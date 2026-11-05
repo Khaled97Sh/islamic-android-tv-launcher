@@ -64,3 +64,10 @@ Names of Allah (asma al-husna): AlAdhan API - https://api.aladhan.com/v1/asmaAlH
 Prayer times: Umayyad Mosque (Damascus) timetable published on Mawaqit - https://mawaqit.net/ar/m/ljm-lmwy-dmshq-dmshq-00000-syria
 Weather: Open-Meteo - https://open-meteo.com
 prophet_medium.jpg - Medium shot of the Green Dome at The Prophet's Mosque (Al Masjid-e-Nabawi).jpg - TheHadiRahim - CC0 - https://commons.wikimedia.org/wiki/File:Medium_shot_of_the_Green_Dome_at_The_Prophet's_Mosque_(Al_Masjid-e-Nabawi).jpg
+
+Kaaba / Masjid al-Haram photos (Wikimedia Commons, DSLR photographs, cropped to 16:9):
+kaaba_plaza_clear.jpg - صحن الطواف خلال إحدى الصلوات في المسجد الحرام.jpg - وكالة الأنباء السعودية - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:%D8%B5%D8%AD%D9%86_%D8%A7%D9%84%D8%B7%D9%88%D8%A7%D9%81_%D8%AE%D9%84%D8%A7%D9%84_%D8%A5%D8%AD%D8%AF%D9%89_%D8%A7%D9%84%D8%B5%D9%84%D9%88%D8%A7%D8%AA_%D9%81%D9%8A_%D8%A7%D9%84%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%AD%D8%B1%D8%A7%D9%85.jpg
+kaaba_aerial_night.jpg - Great Mosque of Mecca.jpg - saudipics - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Great_Mosque_of_Mecca.jpg
+kaaba_aerial_day.jpg - Great Mosque of Mecca1.jpg - Saudipics.com - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:Great_Mosque_of_Mecca1.jpg
+kaaba_clock_tower.jpg - Kaaba, Makkah5.jpg - معتز توفيق اغبارية - CC BY-SA 3.0 - https://commons.wikimedia.org/wiki/File:Kaaba,_Makkah5.jpg
+kaaba_hajj_courtyard.jpg - The Kaaba during Hajj - edited.jpg - Adli Wahid - CC BY-SA 4.0 - https://commons.wikimedia.org/wiki/File:The_Kaaba_during_Hajj_-_edited.jpg
