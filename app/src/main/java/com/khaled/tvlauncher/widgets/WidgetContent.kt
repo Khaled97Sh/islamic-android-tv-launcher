@@ -26,11 +26,18 @@ class WidgetContent(context: Context) {
         sunnah = List(s.length()) { s.getJSONObject(it).let { o -> Sunnah(o.getString("t"), o.getString("k"), o.getString("s")) } }
     }
 
-    /** The same item all day, a new one each day (Damascus date). */
+    /** The asma changes once a day (Damascus date). */
     fun asmaFor(date: LocalDate): Asma? = asma.takeIf { it.isNotEmpty() }?.get(Math.floorMod(date.toEpochDay(), asma.size.toLong()).toInt())
-    fun sunnahFor(date: LocalDate): Sunnah? = sunnah.takeIf { it.isNotEmpty() }?.get(Math.floorMod(date.toEpochDay(), sunnah.size.toLong()).toInt())
-    fun duaFor(date: LocalDate): Dua? = duas.takeIf { it.isNotEmpty() }?.get(Math.floorMod(date.toEpochDay(), duas.size.toLong()).toInt())
 
-    private companion object { const val MAX_DUA_CHARS = 110 }
+    /** Sunnah and dua change every [SLOT_HOURS] hours (00-06, 06-12, 12-18, 18-24 Damascus time), walking the whole library before any repeat. */
+    fun sunnahFor(slot: Long): Sunnah? = sunnah.takeIf { it.isNotEmpty() }?.get(Math.floorMod(slot, sunnah.size.toLong()).toInt())
+    fun duaFor(slot: Long): Dua? = duas.takeIf { it.isNotEmpty() }?.get(Math.floorMod(slot, duas.size.toLong()).toInt())
+
+    companion object {
+        const val SLOT_HOURS = 6
+        /** Index of the 6-hour block [now] falls in, counted from 1970 (stable across days, so no item repeats until the library is used up). */
+        fun slotOf(now: java.time.ZonedDateTime): Long = now.toLocalDate().toEpochDay() * (24 / SLOT_HOURS) + now.hour / SLOT_HOURS
+        private const val MAX_DUA_CHARS = 110
+    }
 }
 

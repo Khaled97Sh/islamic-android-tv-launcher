@@ -13,9 +13,9 @@ val WIDGETS = listOf(
     WidgetDef("next_azan", "الأذان القادم", "عدّاد تنازلي حتى الصلاة التالية", "أ"),
     WidgetDef("prayer_times", "أوقات الصلاة", "الصلوات الخمس اليوم والقادمة مميّزة", "ص"),
     WidgetDef("roznama", "الروزنامة", "صفحة اليوم: الميلادي والهجري والمناسبة القادمة", "ر"),
-    WidgetDef("dua", "دعاء اليوم", "دعاء من حصن المسلم يتغيّر كل يوم", "د"),
+    WidgetDef("dua", "دعاء اليوم", "دعاء من حصن المسلم يتغيّر كل 6 ساعات", "د"),
     WidgetDef("asma", "أسماء الله الحسنى", "اسم جديد كل يوم", "ح"),
-    WidgetDef("sunnah", "سنّة اليوم", "حديث نبوي قصير كل يوم مع مصدره", "س"),
+    WidgetDef("sunnah", "سنّة اليوم", "حديث نبوي قصير يتغيّر كل 6 ساعات مع مصدره", "س"),
 )
 
 /** Which widgets are on the screen, in slot order (right to left, top row first). First run shows the first two. */

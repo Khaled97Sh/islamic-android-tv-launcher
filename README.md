@@ -22,8 +22,8 @@ Press **+** on the app rail to open the selector: toggle each widget, the ayah /
   Mawaqit page (validated, with typo repair). [adhan-java](https://github.com/batoulapps/adhan-java) is the last-resort fallback.
 - **Adhan**: exact alarm for the next prayer, pauses other apps, plays the adhan and shows an on-screen reminder.
   Skipped when the screen is off. OK / Back dismisses it.
-- **Widgets**: next prayer + countdown, all five prayers, Gregorian + Hijri date, names of Allah, sunnah of the day,
-  duas. Optional ayah and dhikr cards. Smart chips for Friday (Surat al-Kahf) and the last third of the night.
+- **Widgets**: next prayer + countdown, all five prayers, Gregorian + Hijri date, names of Allah, sunnah and dua (a new one
+  every 6 hours, from an offline library large enough to go weeks without repeating). Optional ayah and dhikr cards. Smart chips for Friday (Surat al-Kahf) and the last third of the night.
 - **Azkar news bar** along the bottom (morning / evening schedule) and a rotating ayah.
 - **Photos** of historic mosques, no people, changing every 30 s, with blurred "glass" panels.
 - **App rail** on the left: YouTube, Settings and your own picks. The **+** tile opens a list where you switch widgets on or off and add apps.
