@@ -9,6 +9,6 @@ Thanks for helping! All changes go through a pull request that the maintainer re
 
 ## Content rules
 
-- Background photos: Sunni / Andalusian / Umayyad mosques only, no people, with source + licence added to `assets/bg/CREDITS.txt`. Max 3840x2160 (no 8K).
+- Background photos: historic mosques and the Kaaba, professionally shot, no recognisable faces, with source + licence added to `assets/bg/CREDITS.txt`. Max 3840x2160 (no 8K).
 - Quran, hadith and dua text must cite a source. Arabic changes should be proofread.
 - Keep the UI RTL-correct and usable with a D-pad only.
