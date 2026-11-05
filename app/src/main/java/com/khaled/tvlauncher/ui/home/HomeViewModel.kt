@@ -7,7 +7,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.khaled.tvlauncher.apps.AppItem
 import com.khaled.tvlauncher.apps.AppRepository
+import androidx.compose.ui.graphics.asAndroidBitmap
 import com.khaled.tvlauncher.azan.AzanScheduler
+import com.khaled.tvlauncher.azan.AzanSettings
 import com.khaled.tvlauncher.content.Ayah
 import com.khaled.tvlauncher.content.ContentRepository
 import com.khaled.tvlauncher.content.TickerMode
@@ -104,6 +106,16 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         _bottomHidden.value = cur
     }
 
+    private val _azanOn = MutableStateFlow(AzanSettings.isEnabled(app))
+    /** Whether the azan alarm is on (the tick box in the "+" list). */
+    val azanOn: StateFlow<Boolean> = _azanOn.asStateFlow()
+
+    fun toggleAzan() {
+        val on = !_azanOn.value
+        AzanSettings.setEnabled(getApplication(), on)
+        _azanOn.value = on
+    }
+
     private val _videos = MutableStateFlow<List<Video>>(emptyList())
     /** Suggested YouTube videos for the preview window (empty while offline). */
     val videos: StateFlow<List<Video>> = _videos.asStateFlow()
@@ -128,6 +140,7 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
                         }
                     }
                     if (img == null) continue
+                    com.khaled.tvlauncher.ui.theme.GlassBackdrop.blurred = img.blurred.asAndroidBitmap()
                     _bg.value = img
                     delay(ROTATE_MS)
                 }

@@ -10,6 +10,7 @@ class AzanReceiver : BroadcastReceiver() {
         // Re-arm the next prayer FIRST: whatever happens when starting the service below, later azans must survive.
         runCatching { AzanScheduler.scheduleNext(context) }
             .onFailure { android.util.Log.e("TvLauncher", "re-arm failed", it) }
+        if (!AzanSettings.isEnabled(context)) return   // user turned the azan off
         runCatching {
             context.startForegroundService(Intent(context, AzanService::class.java).putExtra(EXTRA_PRAYER, prayer))
         }.onFailure { android.util.Log.e("TvLauncher", "azan service could not start", it) }

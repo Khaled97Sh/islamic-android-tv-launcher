@@ -101,6 +101,7 @@ import com.khaled.tvlauncher.ui.theme.UiFont
 import com.khaled.tvlauncher.ui.theme.glass
 import com.khaled.tvlauncher.ui.widgets.WidgetGrid
 import com.khaled.tvlauncher.weather.Weather
+import com.khaled.tvlauncher.azan.AZAN_ALERT
 import com.khaled.tvlauncher.widgets.AutoChips
 import com.khaled.tvlauncher.widgets.BOTTOM_CARDS
 import com.khaled.tvlauncher.widgets.ChipInfo
@@ -134,6 +135,7 @@ fun HomeScreen(vm: HomeViewModel) {
     val checked by vm.checked.collectAsStateWithLifecycle()
     val widgetIds by vm.widgets.collectAsStateWithLifecycle()
     val bottomHidden by vm.bottomHidden.collectAsStateWithLifecycle()
+    val azanOn by vm.azanOn.collectAsStateWithLifecycle()
     val videos by vm.videos.collectAsStateWithLifecycle()
     val chips = AutoChips.at(now)
 
@@ -274,7 +276,7 @@ fun HomeScreen(vm: HomeViewModel) {
                     }
                 }
 
-                picker?.let { AppPicker(it, checked, vm::toggleApp, widgetIds, vm::toggleWidget, bottomHidden, vm::toggleBottom, vm::closePicker) }
+                picker?.let { AppPicker(it, checked, vm::toggleApp, widgetIds, vm::toggleWidget, bottomHidden, vm::toggleBottom, azanOn, vm::toggleAzan, vm::closePicker) }
             }
             }
             }
@@ -509,7 +511,8 @@ private fun RailItem(
 private fun AppPicker(
     items: List<AppItem>, checked: Set<String>, onToggle: (String) -> Unit,
     widgetIds: List<String>, onToggleWidget: (String) -> Unit,
-    bottomHidden: Set<String>, onToggleBottom: (String) -> Unit, onClose: () -> Unit
+    bottomHidden: Set<String>, onToggleBottom: (String) -> Unit,
+    azanOn: Boolean, onToggleAzan: () -> Unit, onClose: () -> Unit
 ) {
     BackHandler(onBack = onClose)
     val requester = remember { FocusRequester() }
@@ -540,6 +543,9 @@ private fun AppPicker(
                 itemsIndexed(BOTTOM_CARDS, key = { _, c -> "b_" + c.id }) { _, c ->
                     WidgetPickerRow(c, c.id !in bottomHidden, false, Modifier) { onToggleBottom(c.id) }
                 }
+                // The azan alarm: a tick box like the widgets (not a widget, so it is not counted above).
+                item(key = "h_alerts") { SectionHeader("التنبيهات") }
+                item(key = "azan_alert") { WidgetPickerRow(AZAN_ALERT, azanOn, false, Modifier) { onToggleAzan() } }
                 item(key = "h_apps") { SectionHeader("التطبيقات في القائمة") }
                 itemsIndexed(items, key = { _, it -> it.packageName }) { _, app ->
                     PickerRow(app, app.locked || app.packageName in checked, Modifier) {

@@ -9,8 +9,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.LayerDrawable
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioManager
@@ -108,18 +106,6 @@ class AzanService : Service() {
         val d = resources.displayMetrics.density
         fun dp(v: Float) = (v * d).toInt()
 
-        // Liquid-glass card: smoked dark base, soft diagonal sheen, light-catching edge. (Real window blur is
-        // switched off by this TV's compositor, so the smoke is fairly opaque to keep text clean over any video.)
-        val radius = dp(30f).toFloat()
-        val smoke = GradientDrawable().apply { setColor(0xEC06130F.toInt()); cornerRadius = radius }
-        val sheen = GradientDrawable(
-            GradientDrawable.Orientation.TL_BR,
-            intArrayOf(0x38FFFFFF, 0x00FFFFFF, 0x0FFFFFFF)
-        ).apply { cornerRadius = radius }
-        val edge = GradientDrawable().apply {
-            setColor(Color.TRANSPARENT); cornerRadius = radius; setStroke(dp(1.2f), 0x73FFFFFF)
-        }
-
         fun label(text: String, sp: Float, color: Int, bold: Boolean) = TextView(this).apply {
             this.text = text
             setTextColor(color)
@@ -131,12 +117,14 @@ class AzanService : Service() {
             setShadowLayer(dp(5f).toFloat(), 0f, dp(1.5f).toFloat(), 0xCC000000.toInt())
         }
 
-        val card = LinearLayout(this).apply {
+        val screen = resources.displayMetrics
+        val topPx = dp(28f)
+        // Liquid glass: same layers as the home-screen cards (see AzanGlassCard).
+        val card = AzanGlassCard(this, screen.widthPixels, screen.heightPixels, topPx, dp(30f).toFloat(), dp(1.2f).toFloat()).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
             layoutDirection = android.view.View.LAYOUT_DIRECTION_RTL
             setPadding(dp(44f), dp(22f), dp(44f), dp(22f))
-            background = LayerDrawable(arrayOf(smoke, sheen, edge))
             addView(label("حان وقت صلاة $prayer", 28f, Color.WHITE, bold = true))
             addView(label("قُمْ إلى الصلاة", 17f, if (UI_V2) 0xFFFFE8A8.toInt() else 0xFFF2D58B.toInt(), bold = false).apply { setPadding(0, dp(6f), 0, 0) })
             // Focusable so the remote's OK / Back reaches us and closes the reminder (and the adhan).
@@ -160,7 +148,7 @@ class AzanService : Service() {
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-            y = dp(28f)
+            y = topPx
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) blurBehindRadius = dp(28f) // frosted blur where the compositor supports it
         }
         wm.addView(card, lp)
