@@ -55,6 +55,25 @@ adb shell appops set com.khaled.tvlauncher SCHEDULE_EXACT_ALARM allow
 
 Without those two permissions the adhan reminder card and exact alarms won't work. Open the app once so the alarm is armed.
 
+### Install without adb (no developer mode, no USB debugging)
+
+You only need developer options and USB debugging for the `adb` route above. To sideload on the TV itself:
+
+1. Copy `app-release.apk` to a USB stick, or download it on the TV (browser, or an app such as *Send Files to TV*).
+2. Open it with a file manager app on the TV (for example *X-plore* or *File Commander*).
+3. When Android asks, allow installing from unknown sources for that file manager
+   (Settings > Apps > Special app access > Install unknown apps). This is not developer mode.
+4. Tap *Install*, then open the app once so the first azan alarm is armed.
+5. Grant the permissions by hand (Settings > Apps > Special app access):
+   - **Display over other apps** for the azan reminder card and for coming to the front when the TV wakes up.
+   - **Alarms & reminders** for exact azan times. Without it the azan still fires, possibly a little late.
+
+Without adb the launcher is opened from the app list. Making the **Home button** open it needs the stock home disabled,
+which only `adb` can do (see below).
+
+Release builds are signed with the debug key, so a later build from another machine will not install over it:
+uninstall first (this clears your widget choices).
+
 ### Making the Home button open it (optional)
 
 The stock Google TV home outranks any app, so it has to be disabled (this is device-specific; it was tested on a TCL
@@ -76,8 +95,9 @@ Prayer times, weather and schedules currently target **Damascus**. Other cities 
 
 ## Project layout
 
-- `app/src/main/java/com/khaled/tvlauncher/`: UI (`HomeScreen`, `WidgetCards`, `Glass`), azan (`AzanScheduler`,
-  `AzanReceiver`, `AzanService`), prayer data (`MosqueCalendar`, `MawaqitSync`, `PrayerTimeProvider`), `TrustedClock`.
+- `app/src/main/java/com/khaled/tvlauncher/`: one package per feature: `time`, `prayer`, `azan`, `content`, `widgets`, `weather`,
+  `youtube`, `apps`, and `ui/{home,widgets,background,theme}`. See the layout in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+- `gradle/libs.versions.toml`: all dependency and plugin versions (version catalog).
 - `app/src/main/assets/`: `ayat.json`, `azkar.json`, `duas.json`, `sunnah.json`, `asma.json`, background photos.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): how the pieces fit together.
 - `tools/build_content.py`: regenerates the ayat / azkar JSON from open datasets.
