@@ -69,6 +69,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -100,6 +101,7 @@ import com.khaled.tvlauncher.ui.theme.UiFont
 import com.khaled.tvlauncher.ui.theme.glass
 import com.khaled.tvlauncher.ui.widgets.WidgetGrid
 import com.khaled.tvlauncher.weather.Weather
+import com.khaled.tvlauncher.azan.AZAN_ALERT
 import com.khaled.tvlauncher.widgets.AutoChips
 import com.khaled.tvlauncher.widgets.BOTTOM_CARDS
 import com.khaled.tvlauncher.widgets.ChipInfo
@@ -133,6 +135,7 @@ fun HomeScreen(vm: HomeViewModel) {
     val checked by vm.checked.collectAsStateWithLifecycle()
     val widgetIds by vm.widgets.collectAsStateWithLifecycle()
     val bottomHidden by vm.bottomHidden.collectAsStateWithLifecycle()
+    val azanOn by vm.azanOn.collectAsStateWithLifecycle()
     val videos by vm.videos.collectAsStateWithLifecycle()
     val chips = AutoChips.at(now)
 
@@ -273,7 +276,7 @@ fun HomeScreen(vm: HomeViewModel) {
                     }
                 }
 
-                picker?.let { AppPicker(it, checked, vm::toggleApp, widgetIds, vm::toggleWidget, bottomHidden, vm::toggleBottom, vm::closePicker) }
+                picker?.let { AppPicker(it, checked, vm::toggleApp, widgetIds, vm::toggleWidget, bottomHidden, vm::toggleBottom, azanOn, vm::toggleAzan, vm::closePicker) }
             }
             }
             }
@@ -508,7 +511,8 @@ private fun RailItem(
 private fun AppPicker(
     items: List<AppItem>, checked: Set<String>, onToggle: (String) -> Unit,
     widgetIds: List<String>, onToggleWidget: (String) -> Unit,
-    bottomHidden: Set<String>, onToggleBottom: (String) -> Unit, onClose: () -> Unit
+    bottomHidden: Set<String>, onToggleBottom: (String) -> Unit,
+    azanOn: Boolean, onToggleAzan: () -> Unit, onClose: () -> Unit
 ) {
     BackHandler(onBack = onClose)
     val requester = remember { FocusRequester() }
@@ -539,6 +543,9 @@ private fun AppPicker(
                 itemsIndexed(BOTTOM_CARDS, key = { _, c -> "b_" + c.id }) { _, c ->
                     WidgetPickerRow(c, c.id !in bottomHidden, false, Modifier) { onToggleBottom(c.id) }
                 }
+                // The azan alarm: a tick box like the widgets (not a widget, so it is not counted above).
+                item(key = "h_alerts") { SectionHeader("التنبيهات") }
+                item(key = "azan_alert") { WidgetPickerRow(AZAN_ALERT, azanOn, false, Modifier) { onToggleAzan() } }
                 item(key = "h_apps") { SectionHeader("التطبيقات في القائمة") }
                 itemsIndexed(items, key = { _, it -> it.packageName }) { _, app ->
                     PickerRow(app, app.locked || app.packageName in checked, Modifier) {
@@ -637,7 +644,7 @@ private fun SectionHeader(text: String) {
     )
 }
 
-/** A widget row: letter badge, title + one-line description, tick. Greyed out (still focusable) when the 4 slots are taken. */
+/** A widget row: icon tile (white icon on the same gold tile), title + one-line description, tick. Greyed out (still focusable) when the 4 slots are taken. */
 @Composable
 private fun WidgetPickerRow(w: WidgetDef, on: Boolean, full: Boolean, modifier: Modifier, onClick: () -> Unit) {
     val source = remember { MutableInteractionSource() }
@@ -654,7 +661,7 @@ private fun WidgetPickerRow(w: WidgetDef, on: Boolean, full: Boolean, modifier: 
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(Modifier.size(36.dp).clip(RoundedCornerShape(10.dp)).background(Gold.copy(alpha = if (full) 0.18f else 0.35f)), contentAlignment = Alignment.Center) {
-            BasicText(w.glyph, style = TextStyle(fontFamily = UiFont, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Medium))
+            Image(painterResource(w.icon), null, Modifier.size(24.dp), alpha = if (full) 0.5f else 1f)
         }
         Spacer(Modifier.width(14.dp))
         Column(Modifier.weight(1f)) {

@@ -13,9 +13,21 @@ import java.time.Instant
 object AzanScheduler {
     private const val REQUEST_CODE = 4401
 
+    /** Removes the pending alarm (used when the user switches the azan off). */
+    fun cancel(context: Context) {
+        val app = context.applicationContext
+        val am = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        PendingIntent.getBroadcast(
+            app, REQUEST_CODE, Intent(app, AzanReceiver::class.java),
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        )?.let { am.cancel(it); it.cancel() }
+    }
+
     fun scheduleNext(context: Context) {
         val app = context.applicationContext
-        val next = PrayerTimeProvider.nextAfter(Instant.ofEpochMilli(TrustedClock.now()))
+        // Switched off in the "+" list: keep nothing pending (every caller, boot / time change / timetable update, ends up here).
+        if (!AzanSettings.isEnabled(app)) { cancel(app); return }
+        val next =PrayerTimeProvider.nextAfter(Instant.ofEpochMilli(TrustedClock.now()))
         val am = app.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pi = PendingIntent.getBroadcast(
             app,
