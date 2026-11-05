@@ -273,7 +273,7 @@ private fun RoznamaWidget(now: ZonedDateTime) {
 
 @Composable
 private fun DuaWidget(now: ZonedDateTime, content: WidgetContent) {
-    val dua = remember(now.toLocalDate()) { content.duaFor(now.toLocalDate()) } ?: return
+    val dua = remember(WidgetContent.slotOf(now)) { content.duaFor(WidgetContent.slotOf(now)) } ?: return
     // Title on the very top edge, caption on the bottom edge, the dua text centred between them (FitBox fill = true).
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
         BasicText(dua.source, style = txt(Gold, 12), maxLines = 1, overflow = TextOverflow.Ellipsis)
@@ -300,7 +300,7 @@ private fun AsmaWidget(now: ZonedDateTime, content: WidgetContent) {
 
 @Composable
 private fun SunnahWidget(now: ZonedDateTime, content: WidgetContent) {
-    val h = remember(now.toLocalDate()) { content.sunnahFor(now.toLocalDate()) } ?: return
+    val h = remember(WidgetContent.slotOf(now)) { content.sunnahFor(WidgetContent.slotOf(now)) } ?: return
     // Long sayings get a smaller font so they still fit the card without being cut off.
     val plain = h.text.count { it.code !in 0x064B..0x065F && it.code != 0x0670 }
     val size = if (plain > 95) 13 else 14

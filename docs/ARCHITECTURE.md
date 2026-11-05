@@ -56,6 +56,10 @@ welcome contribution.
 ## Content
 `app/src/main/assets/{ayat,azkar,duas,sunnah,asma}.json`. Source credits are in `assets/bg/CREDITS.txt`.
 
+The sunnah and dua widgets change every 6 hours (Damascus time: 00, 06, 12, 18). `WidgetContent.slotOf()` turns the time into a block
+number and the item is `library[slot % size]`, so every item is shown once before any repeats (library of ~80 = about 20 days).
+To grow the libraries run `tools/extend_widget_content.py`: it only adds entries, copied from open datasets, and skips duplicates.
+
 ## Testing
 ```sh
 ./gradlew :app:testDebugUnitTest

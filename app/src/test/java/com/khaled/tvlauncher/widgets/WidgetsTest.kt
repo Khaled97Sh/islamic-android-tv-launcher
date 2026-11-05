@@ -68,4 +68,14 @@ class WidgetsTest {
         assertEquals("شهر رمضان", o.name)
         assertTrue(o.days in 80..110)
     }
+
+    @Test fun sunnahAndDuaSlotsChangeEverySixHoursAndNeverSkipBackwards() {
+        fun slot(h: Int, m: Int = 0, day: Int = 6) = WidgetContent.slotOf(at(2026, 11, day, h, m))
+        assertEquals(slot(0), slot(5, 59))
+        assertEquals(slot(0) + 1, slot(6))
+        assertEquals(slot(6) + 1, slot(12))
+        assertEquals(slot(12) + 1, slot(18))
+        assertEquals(slot(18) + 1, slot(0, 0, day = 7))          // midnight starts the next block
+        assertEquals(4L, slot(0, 0, day = 7) - slot(0, 0, day = 6))   // four items per day
+    }
 }
