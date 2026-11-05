@@ -123,7 +123,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
                     val img = withContext(Dispatchers.IO) {
                         when (item) {
                             is BgItem.Static -> bgLoader.load(item.index)
-                            is BgItem.Online -> bgLoader.load(onlineBg.file(item.name)).also { if (it == null) onlineBg.discard(item.name) }
+                            is BgItem.Online -> runCatching { bgLoader.load(onlineBg.file(item.name)) }.getOrNull()
+                                .also { if (it == null) onlineBg.discard(item.name) }
                         }
                     }
                     if (img == null) continue
@@ -135,7 +136,12 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         // Extra photos: downloaded one at a time while online (never blocks the UI), kept on disk, shown after the bundled ones.
         viewModelScope.launch(guard) {
             delay(20_000L)   // let Wi-Fi come up and the first screen settle
-            while (true) delay(withContext(Dispatchers.IO) { onlineBg.syncStep() })
+            // Offline, a full disk, an out-of-memory decode, a changed API: any failure just means "try again later".
+            while (true) delay(withContext(Dispatchers.IO) {
+                runCatching { onlineBg.syncStep() }
+                    .onFailure { android.util.Log.w("TvLauncher", "online bg step failed", it) }
+                    .getOrDefault(OnlineBackgrounds.RETRY_MS)
+            })
         }
         // Clock + ticker window: the display has minute resolution, so tick on the minute boundary.
         viewModelScope.launch(guard) {
