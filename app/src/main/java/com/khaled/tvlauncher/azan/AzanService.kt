@@ -199,7 +199,7 @@ class AzanService : Service() {
             NotificationChannel(CHANNEL_ID, getString(R.string.azan_channel), NotificationManager.IMPORTANCE_LOW)
         )
         return Notification.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_azan)
             .setContentTitle(getString(R.string.azan_notification))
             .setContentText(prayer)
             .build()
