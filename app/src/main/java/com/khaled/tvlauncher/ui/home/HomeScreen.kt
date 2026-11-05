@@ -69,6 +69,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -637,7 +638,7 @@ private fun SectionHeader(text: String) {
     )
 }
 
-/** A widget row: letter badge, title + one-line description, tick. Greyed out (still focusable) when the 4 slots are taken. */
+/** A widget row: icon tile (white icon on the same gold tile), title + one-line description, tick. Greyed out (still focusable) when the 4 slots are taken. */
 @Composable
 private fun WidgetPickerRow(w: WidgetDef, on: Boolean, full: Boolean, modifier: Modifier, onClick: () -> Unit) {
     val source = remember { MutableInteractionSource() }
@@ -654,7 +655,7 @@ private fun WidgetPickerRow(w: WidgetDef, on: Boolean, full: Boolean, modifier: 
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(Modifier.size(36.dp).clip(RoundedCornerShape(10.dp)).background(Gold.copy(alpha = if (full) 0.18f else 0.35f)), contentAlignment = Alignment.Center) {
-            BasicText(w.glyph, style = TextStyle(fontFamily = UiFont, color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Medium))
+            Image(painterResource(w.icon), null, Modifier.size(24.dp), alpha = if (full) 0.5f else 1f)
         }
         Spacer(Modifier.width(14.dp))
         Column(Modifier.weight(1f)) {
