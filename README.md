@@ -10,6 +10,12 @@ mosques. Built with Kotlin and Jetpack Compose, designed for the remote (D-pad) 
 |---|---|
 | ![Dome of the Rock](docs/screenshots/home-dome.jpg) | ![Mosque ceiling](docs/screenshots/home-ceiling.jpg) |
 
+## Customize with the + button
+
+Press **+** on the app rail to open the selector: toggle each widget, the ayah / dhikr cards and extra apps with the remote.
+
+![Widget selector](docs/screenshots/widget-selector.jpg)
+
 ## Features
 
 - **Prayer times that work offline**: a full-year timetable is bundled, and refreshed every 10 days from the mosque's
@@ -19,8 +25,8 @@ mosques. Built with Kotlin and Jetpack Compose, designed for the remote (D-pad) 
 - **Widgets**: next prayer + countdown, all five prayers, Gregorian + Hijri date, names of Allah, sunnah of the day,
   duas. Optional ayah and dhikr cards. Smart chips for Friday (Surat al-Kahf) and the last third of the night.
 - **Azkar news bar** along the bottom (morning / evening schedule) and a rotating ayah.
-- **Photos** of Sunni / Andalusian / Umayyad mosques, no people, changing every 30 s, with blurred "glass" panels.
-- **App rail** on the left: YouTube, Pro TV, Settings, your own picks.
+- **Photos** of historic mosques, no people, changing every 30 s, with blurred "glass" panels.
+- **App rail** on the left: YouTube, Settings and your own picks. The **+** tile opens a list where you switch widgets on or off and add apps.
 - **Trusted clock**: TVs without a battery-backed clock show a wrong date after an offline boot; the launcher keeps correct time anyway.
 - Fonts: IBM Plex Sans Arabic and Amiri Quran.
 
@@ -63,12 +69,18 @@ adb shell cmd role add-role-holder --user 0 android.app.role.HOME com.khaled.tvl
 Undo: `adb shell pm enable <package>` for both packages, or `adb uninstall com.khaled.tvlauncher`.
 Use at your own risk on other TVs. See [`tools/reclaim-home.sh`](tools/reclaim-home.sh).
 
+## Location
+
+Prayer times, weather and schedules currently target **Damascus**. Other cities need a few constants changed, see
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#location). Making this configurable is a great first contribution.
+
 ## Project layout
 
 - `app/src/main/java/com/khaled/tvlauncher/`: UI (`HomeScreen`, `WidgetCards`, `Glass`), azan (`AzanScheduler`,
   `AzanReceiver`, `AzanService`), prayer data (`MosqueCalendar`, `MawaqitSync`, `PrayerTimeProvider`), `TrustedClock`.
 - `app/src/main/assets/`: `ayat.json`, `azkar.json`, `duas.json`, `sunnah.json`, `asma.json`, background photos.
-- [`CLAUDE.md`](CLAUDE.md): detailed technical notes on design decisions.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): how the pieces fit together.
+- `tools/build_content.py`: regenerates the ayat / azkar JSON from open datasets.
 
 ## Contributing
 
@@ -81,7 +93,8 @@ please cite the source.
 - Photos: Wikimedia Commons, individual authors and licences in [`app/src/main/assets/bg/CREDITS.txt`](app/src/main/assets/bg/CREDITS.txt) (CC BY / CC BY-SA / CC0).
 - Quran text: [Tanzil Project](https://tanzil.net). Azkar: Hisn al-Muslim dataset, [rn0x/Adhkar-json](https://github.com/rn0x/Adhkar-json).
 - Fonts: IBM Plex Sans Arabic and Amiri Quran, SIL OFL 1.1 (`app/src/main/assets/licenses/`).
-- Adhan audio and timetable: see the notes in CLAUDE.md. If you own any asset and want it removed or credited, open an issue.
+- Prayer timetable: the Umayyad Mosque (Damascus) published timetable on [Mawaqit](https://mawaqit.net).
+- If you own any asset and want it removed or credited, please open an issue.
 
 ## License
 

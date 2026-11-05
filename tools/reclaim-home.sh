@@ -1,7 +1,8 @@
 #!/bin/sh
-# Backup only: if the stock Google TV home ever gets enabled again, run this from the Mac to make our launcher Home again.
-# Usage: tools/reclaim-home.sh [tv-ip]   (default 172.20.10.5; adb must be authorized from this Mac)
-TV="${1:-172.20.10.5}:5555"
+# Backup only: if the stock Google TV home ever gets enabled again, run this from your computer to make our launcher Home again.
+# Usage: tools/reclaim-home.sh [tv-ip]   ( adb must be authorized from your computer)
+[ -z "$1" ] && { echo "usage: $0 <tv-ip>"; exit 1; }
+TV="$1:5555"
 adb connect "$TV" >/dev/null
 adb -s "$TV" shell pm disable-user --user 0 com.google.android.apps.tv.launcherx
 adb -s "$TV" shell pm disable-user --user 0 com.google.android.tungsten.setupwraith
