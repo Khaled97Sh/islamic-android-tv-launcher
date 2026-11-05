@@ -25,6 +25,8 @@ class TrustedClockTest {
         setUp(goodNow, goodNow, 500, 5, 6); sys = badBoot; el = 10_000
         assertFalse(TrustedClock.isSystemClockGood())
         assertEquals(goodNow, TrustedClock.now())
+        el += 3 * 60_000L   // three minutes later the clock must have moved
+        assertEquals(goodNow + 3 * 60_000L, TrustedClock.now())
     }
 
     @Test fun wrongClockWithoutRebootKeepsCountingWithTheTimer() {

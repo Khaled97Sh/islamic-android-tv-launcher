@@ -44,7 +44,11 @@ object TrustedClock {
             anchorUtc = s; anchorElapsed = e; anchorBoot = bootNow; floor = s
             return s
         }
-        return if (anchorBoot == bootNow && e >= anchorElapsed) anchorUtc + (e - anchorElapsed) else floor
+        if (anchorBoot != bootNow || e < anchorElapsed) {
+            // Rebooted with a wrong system clock: start from the last good time and count forward from this moment.
+            anchorUtc = floor; anchorElapsed = e; anchorBoot = bootNow
+        }
+        return anchorUtc + (e - anchorElapsed)
     }
 
     /** True when the time comes from the system clock, false when the app is carrying it forward itself. */
