@@ -84,7 +84,23 @@ Judge performance on the **release** build only; debug is much slower.
 ## Install on a TV
 
 1. TV: Settings > System > About > tap *Build* 7 times, then Developer options > USB debugging ON. Note the TV IP.
-2. From a computer on the same Wi-Fi:
+2. From a computer on the same Wi-Fi, run one command:
+
+```sh
+tools/install.sh TV_IP
+```
+
+It installs the app (your local release build, or the latest GitHub release if you have not built one), grants the two
+permissions the adhan needs, **makes the Home button open the launcher** (whatever stock home the TV has) and checks
+that it worked.
+Accept the *Allow USB debugging* box on the TV the first time. Undo with `tools/install.sh --undo TV_IP`.
+
+> **Installing the APK alone is not enough.** The stock Google TV home outranks any installed app, so until it is switched
+> off the Home button keeps opening Google TV. The script does this for you; if you install by hand (or you are an AI
+> agent doing the install), the [Home button step](#the-home-button-step-by-hand) is part of the install, not an extra.
+
+<details>
+<summary>The same steps by hand (Windows, or if you prefer)</summary>
 
 ```sh
 adb connect TV_IP:5555
@@ -93,7 +109,10 @@ adb shell appops set com.khaled.tvlauncher SYSTEM_ALERT_WINDOW allow
 adb shell appops set com.khaled.tvlauncher SCHEDULE_EXACT_ALARM allow
 ```
 
-Without those two permissions the adhan reminder card and exact alarms won't work. Open the app once so the alarm is armed.
+Without those two permissions the adhan reminder card and exact alarms won't work. Then do the
+[Home button step](#the-home-button-step-by-hand) and open the app once so the alarm is armed.
+
+</details>
 
 ### Install without adb (no developer mode, no USB debugging)
 
@@ -108,24 +127,37 @@ You only need developer options and USB debugging for the `adb` route above. To 
    - **Display over other apps** for the azan reminder card and for coming to the front when the TV wakes up.
    - **Alarms & reminders** for exact azan times. Without it the azan still fires, possibly a little late.
 
-Without adb the launcher is opened from the app list. Making the **Home button** open it needs the stock home disabled,
-which only `adb` can do (see below).
+Without adb the launcher is opened from the app list: the **Home button** keeps opening Google TV, because switching the
+stock home off is something only `adb` can do (see below).
 
 Release builds are signed with the debug key, so a later build from another machine will not install over it:
 uninstall first (this clears your widget choices).
 
-### Making the Home button open it (optional)
+### The Home button step by hand
 
-The stock Google TV home outranks any app, so it has to be disabled (this is device-specific; it was tested on a TCL
-"Smart TV Pro", Android 12):
+`tools/install.sh` already does this, on any TV: it asks Android which app owns Home and, while that is not the launcher,
+switches that app off and asks again. No package names are assumed; Settings and system packages are never touched, and
+every app it switches off is recorded on the TV so `--undo` restores exactly those.
+
+By hand it is the same loop. Ask who owns Home:
 
 ```sh
-adb shell pm disable-user --user 0 com.google.android.apps.tv.launcherx
-adb shell pm disable-user --user 0 com.google.android.tungsten.setupwraith
+adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME
+```
+
+If the last line does not start with `com.khaled.tvlauncher`, switch that package off and take the role, then ask again:
+
+```sh
+adb shell pm disable-user --user 0 THAT_PACKAGE
 adb shell cmd role add-role-holder --user 0 android.app.role.HOME com.khaled.tvlauncher
 ```
 
-Undo: `adb shell pm enable <package>` for both packages, or `adb uninstall com.khaled.tvlauncher`.
+On a TCL "Smart TV Pro" (Google TV, Android 12, the only TV tested so far) the packages are
+`com.google.android.apps.tv.launcherx` and then `com.google.android.tungsten.setupwraith`. Never disable `android`,
+Settings or System UI.
+
+Undo: `tools/install.sh --undo TV_IP`, or `adb shell pm enable <package>` for each one. Do this **before** uninstalling
+the launcher, so the TV is not left without a home screen.
 Use at your own risk on other TVs. See [`tools/reclaim-home.sh`](tools/reclaim-home.sh).
 
 ## Location
