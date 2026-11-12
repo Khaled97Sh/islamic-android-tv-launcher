@@ -10,8 +10,12 @@ set -eu
 
 PKG=com.khaled.tvlauncher
 REPO=Khaled97Sh/islamic-android-tv-launcher
-# Stock homes that outrank any installed launcher. Only the ones present on the TV are touched.
-STOCK_HOMES="com.google.android.apps.tv.launcherx com.google.android.tungsten.setupwraith com.google.android.tvlauncher"
+# Never disabled, whatever the TV says owns Home.
+PROTECTED="android com.android.settings com.android.tv.settings com.android.systemui com.android.provision"
+# The script records every home app it disables here (on the TV), so --undo restores exactly those.
+DISABLED_LIST=/data/local/tmp/islamic-tv-launcher-disabled-homes
+# Used by --undo only, for TVs that were set up by hand before this script existed.
+KNOWN_STOCK_HOMES="com.google.android.apps.tv.launcherx com.google.android.tungsten.setupwraith com.google.android.tvlauncher"
 
 usage() { sed -n '2,8p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
 say() { printf '%s\n' "$*"; }
@@ -30,6 +34,25 @@ installed() { [ -n "$(tv pm path "$1" | grep '^package:' || true)" ]; }
 home_now() {
     tv cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME | tail -1
 }
+# Works on any TV: ask Android who owns Home, and while it is not us, switch that app off and ask again
+# (on Google TV this walks launcherx -> setupwraith -> us). Stops at protected packages and after 6 rounds.
+take_home() {
+    round=0
+    while [ "$round" -lt 6 ]; do
+        tv cmd role add-role-holder --user 0 android.app.role.HOME "$PKG" >/dev/null
+        HOME_NOW="$(home_now)"
+        owner="${HOME_NOW%%/*}"
+        case "$HOME_NOW" in "$PKG"/*) return 0 ;; esac
+        case "$owner" in "" | *" "* | *[!A-Za-z0-9_.]*) return 1 ;; *.*) ;; *) return 1 ;; esac
+        for x in $PROTECTED; do [ "$owner" = "$x" ] && return 1; done
+        case "$(tv pm disable-user --user 0 "$owner")" in
+            *disabled-user*) say "switched off stock home $owner"; tv "echo $owner >> $DISABLED_LIST" >/dev/null ;;
+            *) return 1 ;;
+        esac
+        round=$((round + 1))
+    done
+    return 1
+}
 
 adb connect "$TV" >/dev/null 2>&1 || true
 STATE="$(adb -s "$TV" get-state 2>&1 || true)"
@@ -40,9 +63,11 @@ case "$STATE" in
 esac
 
 if [ "$UNDO" = 1 ]; then
-    for p in $STOCK_HOMES; do
+    RECORDED="$(tv cat "$DISABLED_LIST" | grep -E '^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)+$' || true)"
+    for p in $(printf '%s\n' $RECORDED $KNOWN_STOCK_HOMES | sort -u); do
         if installed "$p"; then tv pm enable "$p" >/dev/null; say "enabled $p"; fi
     done
+    tv rm -f "$DISABLED_LIST" >/dev/null
     say "Home button now opens: $(home_now)"
     exit 0
 fi
@@ -77,14 +102,11 @@ tv appops set "$PKG" SCHEDULE_EXACT_ALARM allow >/dev/null
 
 # 3. Home button: the stock home outranks any app, so switch it off and take the Home role.
 #    Done only after the install succeeded, so the TV is never left without a home screen.
-for p in $STOCK_HOMES; do
-    if installed "$p"; then tv pm disable-user --user 0 "$p" >/dev/null; say "disabled stock home $p"; fi
-done
-tv cmd role add-role-holder --user 0 android.app.role.HOME "$PKG" >/dev/null || true
+HOME_NOW=""
+take_home || true
 
-# 4. Open it once (arms the first adhan alarm) and check who owns Home.
-tv am start -a android.intent.action.MAIN -c android.intent.category.HOME >/dev/null
-HOME_NOW="$(home_now)"
+# 4. Open it once (arms the first adhan alarm) and report who owns Home.
+tv am start -n "$PKG/.MainActivity" >/dev/null
 case "$HOME_NOW" in
     "$PKG"/*)
         say "Done. The Home button opens the launcher."
@@ -98,11 +120,8 @@ case "$HOME_NOW" in
     *)
         say ""
         say "Installed, but the Home button still opens: $HOME_NOW"
-        say "This TV uses a home app this script does not know, so it was left alone."
-        say "If that package is the TV maker's home screen (not Settings or a system package), hand Home over with:"
-        say "  adb -s $TV shell pm disable-user --user 0 ${HOME_NOW%%/*}"
-        say "  adb -s $TV shell cmd role add-role-holder --user 0 android.app.role.HOME $PKG"
-        say "and please report the package name at https://github.com/$REPO/issues"
+        say "That one is a system package or refused to be switched off, so it was left alone."
+        say "Please report this line and your TV model at https://github.com/$REPO/issues"
         exit 2
         ;;
 esac

@@ -91,7 +91,8 @@ tools/install.sh TV_IP
 ```
 
 It installs the app (your local release build, or the latest GitHub release if you have not built one), grants the two
-permissions the adhan needs, **makes the Home button open the launcher** and checks that it worked.
+permissions the adhan needs, **makes the Home button open the launcher** (whatever stock home the TV has) and checks
+that it worked.
 Accept the *Allow USB debugging* box on the TV the first time. Undo with `tools/install.sh --undo TV_IP`.
 
 > **Installing the APK alone is not enough.** The stock Google TV home outranks any installed app, so until it is switched
@@ -134,25 +135,28 @@ uninstall first (this clears your widget choices).
 
 ### The Home button step by hand
 
-`tools/install.sh` already does this. The stock Google TV home outranks any app, so it has to be disabled (tested on a
-TCL "Smart TV Pro", Android 12):
+`tools/install.sh` already does this, on any TV: it asks Android which app owns Home and, while that is not the launcher,
+switches that app off and asks again. No package names are assumed; Settings and system packages are never touched, and
+every app it switches off is recorded on the TV so `--undo` restores exactly those.
 
-```sh
-adb shell pm disable-user --user 0 com.google.android.apps.tv.launcherx
-adb shell pm disable-user --user 0 com.google.android.tungsten.setupwraith
-adb shell cmd role add-role-holder --user 0 android.app.role.HOME com.khaled.tvlauncher
-```
-
-Check who owns Home (the last line should start with `com.khaled.tvlauncher`):
+By hand it is the same loop. Ask who owns Home:
 
 ```sh
 adb shell cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME
 ```
 
-If another package shows up, that TV uses a different stock home: disable that package the same way (never Settings or a
-system package) and please open an issue with its name.
+If the last line does not start with `com.khaled.tvlauncher`, switch that package off and take the role, then ask again:
 
-Undo: `tools/install.sh --undo TV_IP`, or `adb shell pm enable <package>` for both packages. Do this **before** uninstalling
+```sh
+adb shell pm disable-user --user 0 THAT_PACKAGE
+adb shell cmd role add-role-holder --user 0 android.app.role.HOME com.khaled.tvlauncher
+```
+
+On a TCL "Smart TV Pro" (Google TV, Android 12, the only TV tested so far) the packages are
+`com.google.android.apps.tv.launcherx` and then `com.google.android.tungsten.setupwraith`. Never disable `android`,
+Settings or System UI.
+
+Undo: `tools/install.sh --undo TV_IP`, or `adb shell pm enable <package>` for each one. Do this **before** uninstalling
 the launcher, so the TV is not left without a home screen.
 Use at your own risk on other TVs. See [`tools/reclaim-home.sh`](tools/reclaim-home.sh).
 
