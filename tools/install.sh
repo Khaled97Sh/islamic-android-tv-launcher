@@ -99,6 +99,10 @@ case "$OUT" in
 esac
 tv appops set "$PKG" SYSTEM_ALERT_WINDOW allow >/dev/null
 tv appops set "$PKG" SCHEDULE_EXACT_ALARM allow >/dev/null
+# Lets the launcher switch its Home-catcher service on each time it is opened (fallback if Google TV comes back).
+tv pm grant "$PKG" android.permission.WRITE_SECURE_SETTINGS >/dev/null || true
+# TCL TVs block background services unless APP_AUTO_START is allowed; harmless elsewhere.
+tv appops set "$PKG" APP_AUTO_START allow >/dev/null || true
 
 # 3. Home button: the stock home outranks any app, so switch it off and take the Home role.
 #    Done only after the install succeeded, so the TV is never left without a home screen.

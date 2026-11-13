@@ -11,6 +11,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.khaled.tvlauncher.azan.AzanScheduler
+import com.khaled.tvlauncher.home.HomeCatcherService
 import com.khaled.tvlauncher.ui.home.HomeScreen
 import com.khaled.tvlauncher.ui.home.HomeViewModel
 
@@ -43,6 +44,8 @@ class MainActivity : ComponentActivity() {
             addDataScheme("package")
         }
         registerReceiver(packageChanges, filter)
+        // Every time the launcher is opened (not only after install): make sure the Home-catcher is on.
+        HomeCatcherService.ensureEnabled(this)
         vm.visible = true
         vm.reloadApps()
     }
