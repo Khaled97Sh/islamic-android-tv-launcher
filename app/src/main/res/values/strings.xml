@@ -2,4 +2,5 @@
     <string name="app_name">Islamic Tv Launcher</string>
     <string name="azan_channel">الأذان</string>
     <string name="azan_notification">حان وقت الصلاة</string>
+    <string name="home_catcher_description">Brings the launcher back when the Home button opens another home app (for example Google TV). Reads no screen content.</string>
 </resources>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">التلفاز الإسلامي</string>
+    <string name="home_catcher_description">يعيد المشغّل عند فتح زر الرئيسية لشاشة أخرى (مثل Google TV). لا يقرأ محتوى الشاشة.</string>
 </resources>
