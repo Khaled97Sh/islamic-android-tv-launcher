@@ -32,7 +32,6 @@ class MainActivity : ComponentActivity() {
             BackHandler(enabled = true) {}
             HomeScreen(vm)
         }
-        HomeCatcherService.ensureEnabled(this)
         runCatching { AzanScheduler.scheduleNext(this) }
     }
 
@@ -45,6 +44,8 @@ class MainActivity : ComponentActivity() {
             addDataScheme("package")
         }
         registerReceiver(packageChanges, filter)
+        // Every time the launcher is opened (not only after install): make sure the Home-catcher is on.
+        HomeCatcherService.ensureEnabled(this)
         vm.visible = true
         vm.reloadApps()
     }
