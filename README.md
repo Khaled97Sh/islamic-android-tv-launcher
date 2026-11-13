@@ -90,14 +90,24 @@ Judge performance on the **release** build only; debug is much slower.
 tools/install.sh TV_IP
 ```
 
-It installs the app (your local release build, or the latest GitHub release if you have not built one), grants the two
-permissions the adhan needs, **makes the Home button open the launcher** (whatever stock home the TV has) and checks
-that it worked.
-Accept the *Allow USB debugging* box on the TV the first time. Undo with `tools/install.sh --undo TV_IP`.
+### Make it the default Home button (the one-command way)
 
-> **Installing the APK alone is not enough.** The stock Google TV home outranks any installed app, so until it is switched
-> off the Home button keeps opening Google TV. The script does this for you; if you install by hand (or you are an AI
-> agent doing the install), the [Home button step](#the-home-button-step-by-hand) is part of the install, not an extra.
+This is the recommended way. The script does everything in one run:
+
+- installs the app (your local release build, or the latest GitHub release if you have not built one);
+- grants the adhan permissions (display over other apps, exact alarms);
+- **switches off the stock Google TV home**, so the Home button opens the launcher with no Google TV flash;
+- lets the launcher switch its Home-catcher service on every time it is opened (`WRITE_SECURE_SETTINGS`, and
+  `APP_AUTO_START` so TCL TVs do not block it);
+- checks the result and tells you who owns Home.
+
+Accept the *Allow USB debugging* box on the TV the first time. Undo with `tools/install.sh --undo TV_IP`
+(it turns the stock home back on).
+
+> **Installing the APK alone does not make it the default Home button.** The stock Google TV home outranks any installed
+> app, and only `adb` can switch it off or grant the permissions above. If you install by hand (or you are an AI agent
+> doing the install), the [Home button step](#the-home-button-step-by-hand) is part of the install, not an extra.
+> If Google TV is ever enabled again, run `tools/install.sh TV_IP` again.
 
 <details>
 <summary>The same steps by hand (Windows, or if you prefer)</summary>
@@ -107,9 +117,11 @@ adb connect TV_IP:5555
 adb install -r app/build/outputs/apk/release/app-release.apk
 adb shell appops set com.khaled.tvlauncher SYSTEM_ALERT_WINDOW allow
 adb shell appops set com.khaled.tvlauncher SCHEDULE_EXACT_ALARM allow
+adb shell appops set com.khaled.tvlauncher APP_AUTO_START allow       # TCL: lets the Home-catcher run
+adb shell pm grant com.khaled.tvlauncher android.permission.WRITE_SECURE_SETTINGS
 ```
 
-Without those two permissions the adhan reminder card and exact alarms won't work. Then do the
+Without the first two permissions the adhan reminder card and exact alarms won't work. Then do the
 [Home button step](#the-home-button-step-by-hand) and open the app once so the alarm is armed.
 
 </details>
