@@ -130,7 +130,7 @@ You only need developer options and USB debugging for the `adb` route above. To 
 Without adb the launcher is opened from the app list: the **Home button** keeps opening Google TV, because switching the
 stock home off is something only `adb` can do (see below).
 
-**Fallback without adb:** in TV Settings > Accessibility, switch on *Islamic Tv Launcher*. When Home opens another home app
+**Fallback:** `tools/install.sh` lets the launcher switch its Home-catcher service on every time it is opened. Without adb, switch on *Islamic Tv Launcher* in TV Settings > Accessibility. When Home opens another home app
 (Google TV) the launcher brings itself back. Google TV may flash for a moment first, so the adb script is still the cleaner fix.
 The service reads no screen content; it only checks which app owns the window.
 
