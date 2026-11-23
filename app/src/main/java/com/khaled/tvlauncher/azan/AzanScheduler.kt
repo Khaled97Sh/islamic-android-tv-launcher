@@ -32,7 +32,8 @@ object AzanScheduler {
         val pi = PendingIntent.getBroadcast(
             app,
             REQUEST_CODE,
-            Intent(app, AzanReceiver::class.java).putExtra(AzanReceiver.EXTRA_PRAYER, next.nameAr),
+            Intent(app, AzanReceiver::class.java).putExtra(AzanReceiver.EXTRA_PRAYER, next.nameAr)
+                .putExtra(AzanReceiver.EXTRA_AT, next.at.toEpochMilli()),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         // Armed on the monotonic timer, not the wall clock: the TV's system clock can be wrong after a start without
