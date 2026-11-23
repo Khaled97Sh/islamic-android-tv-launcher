@@ -54,11 +54,11 @@ class AzanService : Service() {
 
         stopAll()
         runCatching { showOverlay(prayer) }.onFailure { android.util.Log.e("TvLauncher", "azan overlay failed", it) }
-        playAdhan()
+        playAdhan(prayer)
         return START_NOT_STICKY
     }
 
-    private fun playAdhan() {
+    private fun playAdhan(prayer: String) {
         val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val attrs = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -69,7 +69,7 @@ class AzanService : Service() {
             .build()
             .also { am.requestAudioFocus(it) }
 
-        val mp = MediaPlayer.create(this, nextAdhanRes(), attrs, am.generateAudioSessionId())
+        val mp = MediaPlayer.create(this, adhanRes(prayer), attrs, am.generateAudioSessionId())
         if (mp == null) {
             // The recording could not be opened: keep the reminder card up for a while, then finish quietly.
             android.util.Log.e("TvLauncher", "adhan MediaPlayer could not be created")
@@ -92,13 +92,9 @@ class AzanService : Service() {
         mp.start()
     }
 
-    /** Alternates between the bundled adhan recordings, remembering which one played last. */
-    private fun nextAdhanRes(): Int {
-        val prefs = getSharedPreferences("azan", Context.MODE_PRIVATE)
-        val i = (prefs.getInt("last", -1) + 1) % ADHANS.size
-        prefs.edit().putInt("last", i).apply()
-        return ADHANS[i]
-    }
+    /** Fajr has its own wording (الصلاة خير من النوم): second.mp3 for Fajr only, first.mp3 for all other prayers. */
+    private fun adhanRes(prayer: String): Int =
+        if (prayer.contains("الفجر")) R.raw.second else R.raw.first
 
     private fun showOverlay(prayer: String) {
         if (!Settings.canDrawOverlays(this)) return
@@ -194,7 +190,6 @@ class AzanService : Service() {
     }
 
     private companion object {
-        val ADHANS = intArrayOf(R.raw.first, R.raw.second)
         const val CHANNEL_ID = "azan"
         const val NOTIFICATION_ID = 77
         const val REMINDER_AFTER_ADHAN_MS = 90_000L

@@ -1,7 +1,7 @@
 [versions]
 # App version: bump both for every release (versionCode must always increase).
-appVersionName = "1.0.2"
-appVersionCode = "3"
+appVersionName = "1.0.3"
+appVersionCode = "4"
 
 agp = "8.13.0"
 kotlin = "2.2.21"
